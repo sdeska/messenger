@@ -10,6 +10,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>18.0.2</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -19,6 +24,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
                 <version>1.2.1</version>
                 <configuration>
                     <mainClass>fi.sdeska.messenger.MessengerGUI</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>MessengerGUI</mainClass>
                 </configuration>
             </plugin>
         </plugins>
