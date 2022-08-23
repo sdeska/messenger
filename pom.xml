@@ -43,7 +43,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>MessengerGUI</mainClass>
+                    <mainClass>fi.sdeska.messenger.MessengerGUI</mainClass>
                 </configuration>
             </plugin>
         </plugins>
