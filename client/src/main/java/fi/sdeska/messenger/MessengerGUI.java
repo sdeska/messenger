@@ -22,7 +22,7 @@ public class MessengerGUI extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-
+        
         client = new MessengerClient();
 
         var setupView = new VBox(5);
@@ -62,18 +62,19 @@ public class MessengerGUI extends Application {
 
     public void startMainView(Stage stage) {
 
-        var view = new HBox();
+        var mainView = new HBox();
+        mainView.setId("mainView");
 
         var contactPanel = new Pane();
         contactPanel.setId("contactPanel");
         contactPanel.setPrefWidth(240);
-        view.getChildren().add(contactPanel);
+        mainView.getChildren().add(contactPanel);
         var chatPanel = new Pane();
         chatPanel.setId("chatPanel");
         chatPanel.setPrefWidth(480);
-        view.getChildren().add(chatPanel);
+        mainView.getChildren().add(chatPanel);
 
-        stage.getScene().setRoot(view);
+        stage.getScene().setRoot(mainView);
         stage.show();
 
     }
