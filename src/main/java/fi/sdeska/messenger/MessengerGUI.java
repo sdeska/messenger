@@ -18,14 +18,18 @@ import javafx.stage.Stage;
 
 public class MessengerGUI extends Application {
     
+    private MessengerClient client;
+
     @Override
     public void start(Stage stage) throws IOException {
+
+        client = new MessengerClient();
 
         var setupView = new VBox(5);
         setupView.setId("setupView");
         setupView.setAlignment(Pos.CENTER);
         setupView.setPadding(new Insets(10));
-        var nameLabel = new Label("Please input your nickname below.");
+        var nameLabel = new Label("Please enter your nickname below.");
         nameLabel.setId("nameLabel");
         var nameBox = new TextField();
         nameBox.setId("nameBox");
@@ -43,6 +47,11 @@ public class MessengerGUI extends Application {
             @Override
             public void handle(ActionEvent e) {
                 
+                if (!client.setName(nameBox.getText())) {
+                    nameLabel.setText("Please enter a non-empty name.");
+                    return;
+                }
+
                 startMainView(stage);
 
             }
