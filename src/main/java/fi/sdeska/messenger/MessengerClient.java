@@ -6,7 +6,7 @@ public class MessengerClient {
     
     public boolean setName(String name) {
         
-        if (name.isEmpty() || name == null || name == "") {
+        if (name == null || name.isEmpty()) {
             return false;
         }
         this.name = name;
