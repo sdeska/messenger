@@ -1,4 +1,4 @@
-package fi.sdeska.messenger;
+package fi.sdeska.messenger.client;
 
 import java.io.IOException;
 

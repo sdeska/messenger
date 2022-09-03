@@ -1,6 +1,5 @@
-package fi.sdeska.messenger;
+package fi.sdeska.messenger.client;
 
-import java.io.*;
 import java.net.SocketTimeoutException;
 
 import javax.net.ssl.SSLSocket;
@@ -13,7 +12,7 @@ public class MessengerClient {
     private final String host = new String("127.0.0.1");
     private final int port = 29999;
 
-    private static final String trustStore = "C:/Users/Esa/programming/gui-messenger/server/truststore.jts";
+    private static final String trustStore = "truststore.jts";
     private static final String password = "changeit";
     
     private String name = null;

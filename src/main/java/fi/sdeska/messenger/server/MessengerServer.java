@@ -1,4 +1,4 @@
-package fi.sdeska.messenger;
+package fi.sdeska.messenger.server;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -35,6 +35,8 @@ public class MessengerServer{
         try {
             SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             socket = (SSLServerSocket) ssf.createServerSocket(serverPort);
+            socket.setEnabledProtocols(protocols);
+            socket.setEnabledCipherSuites(ciphers);
             System.out.println("Server started.");
             listenForConnections();
         }
