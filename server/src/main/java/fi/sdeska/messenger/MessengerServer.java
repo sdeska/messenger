@@ -1,10 +1,11 @@
 package fi.sdeska.messenger;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
@@ -14,16 +15,22 @@ public class MessengerServer{
     private final String[] ciphers = new String[]{"TLS_AES_128_GCM_SHA256"};
     private final int serverPort = 29999;
 
+    private static final String keyStore = "keystore.jks";
+    private static final String password = "changeit";
+
     private SSLServerSocket socket = null;
-    private List<Socket> connections = null;
+    private List<SSLSocket> connections = null;
 
     MessengerServer() {
 
-        connections = new ArrayList<Socket>();
+        connections = new ArrayList<SSLSocket>();
 
     }
 
     public void startServer() {
+
+        System.setProperty("javax.net.ssl.keyStore", keyStore);
+        System.setProperty("javax.net.ssl.keyStorePassword", password);
 
         try {
             SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
@@ -46,8 +53,9 @@ public class MessengerServer{
             public void run() {
                 while (true) {
                     try {
-                        Socket client = socket.accept();
+                        SSLSocket client = (SSLSocket) socket.accept();
                         connections.add(client);
+                        sendInitialByte(client);
                         System.out.println("Client connected.");
                     }
                     catch (Exception e) {
@@ -59,6 +67,18 @@ public class MessengerServer{
         });
         listeningThread.run();
         
+    }
+
+    public void sendInitialByte(SSLSocket socket) {
+
+        try {
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            out.writeByte(1);
+        }
+        catch (IOException e) {
+            System.out.println("Error: Failed to send initial byte.");
+        }
+
     }
 
     public static void main(String[] args) {
