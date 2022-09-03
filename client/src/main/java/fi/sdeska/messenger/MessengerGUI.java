@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 
 public class MessengerGUI extends Application {
     
-    private MessengerClient client;
+    private MessengerClient client = null;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -51,7 +51,9 @@ public class MessengerGUI extends Application {
                     nameLabel.setText("Please enter a non-empty name.");
                     return;
                 }
-
+                if (!client.connectToServer()) {
+                    return;
+                }
                 startMainView(stage);
 
             }
