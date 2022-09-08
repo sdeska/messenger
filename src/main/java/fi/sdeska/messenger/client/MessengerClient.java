@@ -1,5 +1,7 @@
 package fi.sdeska.messenger.client;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 import javax.net.ssl.SSLSocket;
@@ -32,7 +34,9 @@ public class MessengerClient {
             socket.setSoTimeout(5000);
             socket.startHandshake();
 
-            System.out.println("Success.");
+            sendData(this.name);
+
+            System.out.println("Success. Connected to server.");
             return true;
         }
         catch (SocketTimeoutException e) {
@@ -45,6 +49,19 @@ public class MessengerClient {
             return false;
         }
 
+    }
+
+    public void sendData(String data) {
+
+        try {
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            out.writeUTF(data);
+        }
+        catch (IOException e) {
+            System.out.println("Failed to send data to server.");
+            e.printStackTrace();
+        }
+        
     }
     
     public boolean setName(String name) {
