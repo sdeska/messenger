@@ -11,9 +11,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class MessengerGUI extends Application {
@@ -24,6 +28,7 @@ public class MessengerGUI extends Application {
     public void start(Stage stage) throws IOException {
         
         client = new MessengerClient();
+        stage.setTitle("Messenger");
 
         var setupView = new VBox(5);
         setupView.setId("setupView");
@@ -52,6 +57,7 @@ public class MessengerGUI extends Application {
                     return;
                 }
                 if (!client.connectToServer()) {
+                    nameLabel.setText("Connecting to server failed. Please contact the server administrator.");
                     return;
                 }
                 startMainView(stage);
@@ -70,10 +76,12 @@ public class MessengerGUI extends Application {
         var contactPanel = new Pane();
         contactPanel.setId("contactPanel");
         contactPanel.setPrefWidth(240);
+        contactPanel.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         mainView.getChildren().add(contactPanel);
         var chatPanel = new Pane();
         chatPanel.setId("chatPanel");
         chatPanel.setPrefWidth(480);
+        chatPanel.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
         mainView.getChildren().add(chatPanel);
 
         stage.getScene().setRoot(mainView);
