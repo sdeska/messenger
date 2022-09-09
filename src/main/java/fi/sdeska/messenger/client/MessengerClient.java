@@ -33,7 +33,6 @@ public class MessengerClient {
             socket.setUseClientMode(true);
             socket.setSoTimeout(5000);
             socket.startHandshake();
-
             sendData(this.name);
 
             System.out.println("Success. Connected to server.");
@@ -56,6 +55,7 @@ public class MessengerClient {
         try {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             out.writeUTF(data);
+            out.close();
         }
         catch (IOException e) {
             System.out.println("Failed to send data to server.");
