@@ -1,17 +1,15 @@
 package fi.sdeska.messenger.server;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.SocketException;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
+
+import fi.sdeska.messenger.utility.UtilityFunctions;
 
 public class MessengerServer{
 
@@ -25,9 +23,12 @@ public class MessengerServer{
     private SSLServerSocket socket = null;
     private Map<String, SSLSocket> connections = null;
 
+    private static UtilityFunctions util = null;
+
     MessengerServer() {
 
         connections = new TreeMap<String, SSLSocket>();
+        util = new UtilityFunctions();
 
     }
 
@@ -61,7 +62,7 @@ public class MessengerServer{
                     try {
                         SSLSocket client = (SSLSocket) socket.accept();
                         sendInitialByte(client);
-                        String name = readStringData(client.getInputStream());
+                        String name = util.readStringData(client.getInputStream());
                         connections.put(name, client);
                         System.out.println("Client connected.");
                     }
@@ -84,32 +85,6 @@ public class MessengerServer{
         }
         catch (IOException e) {
             System.out.println("Error: Failed to send initial byte.");
-        }
-
-    }
-
-    public String readStringData(InputStream in) {
-
-        var data = new ByteArrayOutputStream();
-        var buffer = new byte[1024];
-        try {
-            for (int length; (length = in.read(buffer)) != -1; ) {
-                data.write(buffer, 0, length);
-            }
-        } catch (SocketException e) {
-            System.out.println("Error: Problem in the socket connection.");
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            System.out.println("Error: Unable to read received data.");
-            e.printStackTrace();
-        }
-        try {
-            return data.toString("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            System.out.println("Error: Unsupported encoding on return data.");
-            e.printStackTrace();
-            return "";
         }
 
     }
