@@ -1,24 +1,26 @@
 package fi.sdeska.messenger.client;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import fi.sdeska.messenger.utility.UtilityFunctions;
+
 public class MessengerClient {
 
     private static final String[] protocols = new String[]{"TLSv1.3"};
     private static final String[] ciphers = new String[]{"TLS_AES_128_GCM_SHA256"};
-    private final String host = new String("127.0.0.1");
-    private final int port = 29999;
+    private static final String host = new String("127.0.0.1");
+    private static final int port = 29999;
 
     private static final String trustStore = "truststore.jts";
     private static final String password = "changeit";
     
     private String name = null;
     private SSLSocket socket = null;
+
+    private static UtilityFunctions util = null;
 
     public boolean connectToServer() {
 
@@ -33,7 +35,7 @@ public class MessengerClient {
             socket.setUseClientMode(true);
             socket.setSoTimeout(5000);
             socket.startHandshake();
-            sendData(this.name);
+            util.sendData(this.name, socket);
 
             System.out.println("Success. Connected to server.");
             return true;
@@ -48,20 +50,6 @@ public class MessengerClient {
             return false;
         }
 
-    }
-
-    public void sendData(String data) {
-
-        try {
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            out.writeUTF(data);
-            out.close();
-        }
-        catch (IOException e) {
-            System.out.println("Failed to send data to server.");
-            e.printStackTrace();
-        }
-        
     }
     
     public boolean setName(String name) {
