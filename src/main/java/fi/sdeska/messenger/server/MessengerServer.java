@@ -1,6 +1,5 @@
 package fi.sdeska.messenger.server;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,13 +20,13 @@ public class MessengerServer{
     private static final String password = "changeit";
 
     private SSLServerSocket socket = null;
-    private Map<String, SSLSocket> connections = null;
+    private Map<String, ClientThread> connections = null;
 
     private static UtilityFunctions util = null;
 
     MessengerServer() {
 
-        connections = new TreeMap<String, SSLSocket>();
+        connections = new TreeMap<String, ClientThread>();
         util = new UtilityFunctions();
 
     }
@@ -55,36 +54,18 @@ public class MessengerServer{
     public void listenForConnections() {
 
         System.out.println("Waiting for connections...");
-        var listeningThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        SSLSocket client = (SSLSocket) socket.accept();
-                        sendInitialByte(client);
-                        String name = util.readStringData(client.getInputStream());
-                        connections.put(name, client);
-                        System.out.println("Client connected.");
-                    }
-                    catch (Exception e) {
-                        System.out.println("Error: Setting up connection failed.");
-                        e.printStackTrace();
-                    }
-                }
+        while (true) {
+            try {
+                SSLSocket client = (SSLSocket) socket.accept();
+                var thread = new ClientThread(client);
+                thread.start();
+                connections.put(thread.getName(), thread);
+                System.out.println("Client connected.");
             }
-        });
-        listeningThread.run();
-        
-    }
-
-    public void sendInitialByte(SSLSocket socket) {
-
-        try {
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            out.writeByte(1);
-        }
-        catch (IOException e) {
-            System.out.println("Error: Failed to send initial byte.");
+            catch (Exception e) {
+                System.out.println("Error: Setting up connection failed.");
+                e.printStackTrace();
+            }
         }
 
     }
