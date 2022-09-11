@@ -47,6 +47,15 @@ public class MessengerGUI extends Application {
         stage.setScene(scene);
         stage.show();
 
+        stage.setOnCloseRequest(event -> {
+            try {
+                client.getSocket().close();
+            } catch (IOException e1) {
+                System.out.println("Error: Unable to close socket.");
+                e1.printStackTrace();
+            }
+        });
+
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -86,6 +95,8 @@ public class MessengerGUI extends Application {
 
         stage.getScene().setRoot(mainView);
         stage.show();
+
+        
 
     }
 
