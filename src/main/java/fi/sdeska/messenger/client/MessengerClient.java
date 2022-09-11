@@ -1,5 +1,7 @@
 package fi.sdeska.messenger.client;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.SocketTimeoutException;
 
 import javax.net.ssl.SSLSocket;
@@ -19,8 +21,14 @@ public class MessengerClient {
     
     private String name = null;
     private SSLSocket socket = null;
+    private DataInputStream in = null;
+    private DataOutputStream out = null;
 
     private static UtilityFunctions util = null;
+
+    MessengerClient() {
+        util = new UtilityFunctions();
+    }
 
     public boolean connectToServer() {
 
@@ -35,7 +43,11 @@ public class MessengerClient {
             socket.setUseClientMode(true);
             socket.setSoTimeout(5000);
             socket.startHandshake();
-            util.sendData(this.name, socket);
+
+            in = new DataInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
+
+            util.sendData(this.name, out);
 
             System.out.println("Success. Connected to server.");
             return true;
