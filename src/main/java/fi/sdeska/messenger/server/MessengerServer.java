@@ -19,8 +19,8 @@ public class MessengerServer{
     private static final String keyStore = "keystore.jks";
     private static final String password = "changeit";
 
-    private SSLServerSocket socket = null;
-    private Map<String, ClientThread> connections = null;
+    private static SSLServerSocket socket = null;
+    private static Map<String, ClientThread> connections = null;
 
     private static UtilityFunctions util = null;
 
@@ -68,6 +68,10 @@ public class MessengerServer{
             }
         }
 
+    }
+
+    public static Map<String, ClientThread> getConnections() {
+        return connections;
     }
 
     public static void main(String[] args) {
