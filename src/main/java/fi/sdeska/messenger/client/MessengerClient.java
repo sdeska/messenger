@@ -78,4 +78,8 @@ public class MessengerClient {
         return this.name;
     }
 
+    public SSLSocket getSocket() {
+        return this.socket;
+    }
+
 }
