@@ -48,6 +48,9 @@ public class MessengerGUI extends Application {
         stage.show();
 
         stage.setOnCloseRequest(event -> {
+            if (client.getSocket() == null) {
+                return;
+            }
             try {
                 client.getSocket().close();
             } catch (IOException e1) {
