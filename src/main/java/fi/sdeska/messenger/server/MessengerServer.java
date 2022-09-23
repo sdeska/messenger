@@ -10,6 +10,9 @@ import javax.net.ssl.SSLServerSocketFactory;
 
 import fi.sdeska.messenger.utility.UtilityFunctions;
 
+/**
+ * Handles the main functionality of the server and listening for and accepting new connection requests.
+ */
 public class MessengerServer{
 
     private final String[] protocols = new String[]{"TLSv1.3"};
@@ -24,6 +27,9 @@ public class MessengerServer{
 
     private static UtilityFunctions util = null;
 
+    /**
+     * The constructor initializes the container for the client connections and the instance of UtilityFunctions.
+     */
     MessengerServer() {
 
         connections = new TreeMap<String, ClientThread>();
@@ -31,6 +37,9 @@ public class MessengerServer{
 
     }
 
+    /**
+     * Starts the server by creating the listening socket and calling listenForConnections().
+     */
     public void startServer() {
 
         System.setProperty("javax.net.ssl.keyStore", keyStore);
@@ -51,6 +60,9 @@ public class MessengerServer{
 
     }
 
+    /**
+     * Listens for incoming connections in a loop. Blocks on socket.accept(). Creates a new ClientThread for each connection and runs them on their own threads.
+     */
     public void listenForConnections() {
 
         System.out.println("Waiting for connections...");
@@ -70,6 +82,10 @@ public class MessengerServer{
 
     }
 
+    /**
+     * Gets a map of all the active connections. Static for allowing access from ClientThreads.
+     * @return map with usernames as keys and respective threads as the values.
+     */
     public static Map<String, ClientThread> getConnections() {
         return connections;
     }

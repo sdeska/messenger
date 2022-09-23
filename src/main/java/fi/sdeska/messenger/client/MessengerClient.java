@@ -9,6 +9,10 @@ import javax.net.ssl.SSLSocketFactory;
 
 import fi.sdeska.messenger.utility.UtilityFunctions;
 
+/**
+ * Handles the backend of the clientside application. 
+ * This includes the connections to the server and other clients.
+ */
 public class MessengerClient {
 
     private static final String[] protocols = new String[]{"TLSv1.3"};
@@ -26,14 +30,23 @@ public class MessengerClient {
 
     private static UtilityFunctions util = null;
 
+    /**
+     * The constructor only initializes everything which can be created before trying for a connection to the server.
+     * The actual connection establishment related operations are performed in connectToServer().
+     */
     MessengerClient() {
+
         util = new UtilityFunctions();
-    }
-
-    public boolean connectToServer() {
-
         System.setProperty("javax.net.ssl.trustStore", trustStore);
         System.setProperty("javax.net.ssl.trustStorePassword", password);
+
+    }
+
+    /**
+     * Attempts to establish a connection to the server.
+     * @return true if connection established successfully, false otherwise.
+     */
+    public boolean connectToServer() {
 
         try {
             SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -47,6 +60,7 @@ public class MessengerClient {
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
 
+            // Send the client's username to the server.
             util.sendData(this.name, out);
 
             System.out.println("Success. Connected to server.");
@@ -64,6 +78,12 @@ public class MessengerClient {
 
     }
     
+    /**
+     * Used for setting the client's username. This name is currently used for client identification,
+     * meaning that duplicate usernames cannot be used.
+     * @param name cannot be empty.
+     * @return true if name successfully set, false otherwise.
+     */
     public boolean setName(String name) {
         
         if (name == null || name.isEmpty()) {
@@ -74,10 +94,18 @@ public class MessengerClient {
 
     }
 
+    /**
+     * Gets the username assigned to the client.
+     * @return name of the client's username.
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Gets the network socket used for communication with the server.
+     * @return the socket connected to the server.
+     */
     public SSLSocket getSocket() {
         return this.socket;
     }
