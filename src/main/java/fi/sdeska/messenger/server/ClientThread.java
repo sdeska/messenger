@@ -10,6 +10,9 @@ import javax.net.ssl.SSLSocket;
 
 import fi.sdeska.messenger.utility.UtilityFunctions;
 
+/**
+ * Handles the operations of a single client connection on the server. Sould always be run on a separate thread.
+ */
 public class ClientThread extends Thread {
 
     private SSLSocket socket = null;
@@ -17,6 +20,10 @@ public class ClientThread extends Thread {
     private DataOutputStream out = null;
     private static UtilityFunctions util = null;
 
+    /**
+     * Constructor saves the socket as well as its streams, also saving the username as the thread's name.
+     * @param socket the socket to be run on the new thread.
+     */
     ClientThread(SSLSocket socket) {
         util = new UtilityFunctions();
         this.socket = socket;
@@ -36,6 +43,9 @@ public class ClientThread extends Thread {
         }
     }
 
+    /**
+     * Overridden run() method of Thread class. Allocates an instance of ClientThread and runs it on its own thread.
+     */
     public void run() {
         while(true) {
             try {
