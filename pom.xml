@@ -32,6 +32,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>3.4.1</version>
         </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.4.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
