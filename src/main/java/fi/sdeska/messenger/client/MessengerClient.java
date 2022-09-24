@@ -7,6 +7,8 @@ import java.net.SocketTimeoutException;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.apache.commons.validator.routines.InetAddressValidator;
+
 import fi.sdeska.messenger.utility.UtilityFunctions;
 
 /**
@@ -17,7 +19,7 @@ public class MessengerClient {
 
     private static final String[] protocols = new String[]{"TLSv1.3"};
     private static final String[] ciphers = new String[]{"TLS_AES_128_GCM_SHA256"};
-    private static final String host = new String("127.0.0.1");
+    private String host = new String("127.0.0.1");
     private static final int port = 29999;
 
     private static final String trustStore = "truststore.jts";
@@ -92,6 +94,23 @@ public class MessengerClient {
         this.name = name;
         return true;
 
+    }
+
+    /**
+     * Sets the IP of the server to connect to. This practically has no use apart from unit testing.
+     * @param ip the IP to change the server address to.
+     * @return true if IP successfully set, false otherwise.
+     */
+    public boolean setIP(String ip) {
+        if (!ip.equals("sdeskaserver.tplinkdns.com")) {
+            return false;
+        }
+        var validator = new InetAddressValidator();
+        if (!validator.isValidInet4Address(ip)) {
+            return false;
+        }
+        this.host = ip;
+        return true;
     }
 
     /**
