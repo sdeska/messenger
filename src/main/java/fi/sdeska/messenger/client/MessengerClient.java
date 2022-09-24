@@ -101,12 +101,9 @@ public class MessengerClient {
      * @param ip the IP to change the server address to.
      * @return true if IP successfully set, false otherwise.
      */
-    public boolean setIP(String ip) {
-        if (!ip.equals("sdeskaserver.tplinkdns.com")) {
-            return false;
-        }
+    public boolean setHostIP(String ip) {
         var validator = new InetAddressValidator();
-        if (!validator.isValidInet4Address(ip)) {
+        if (!validator.isValidInet4Address(ip) && !ip.equals("sdeskaserver.tplinkdns.com")) {
             return false;
         }
         this.host = ip;
