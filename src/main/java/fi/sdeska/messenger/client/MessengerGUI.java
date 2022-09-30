@@ -38,6 +38,8 @@ public class MessengerGUI extends Application {
         
         client = new MessengerClient();
         stage.setTitle("Messenger");
+        stage.setMinHeight(480);
+        stage.setMinWidth(720);
 
         // Creating the container in which to have the whole setup window.
         var setupView = new VBox(5);
@@ -55,7 +57,7 @@ public class MessengerGUI extends Application {
         confirmButton.setId("confirmButton");
         setupView.getChildren().addAll(nameLabel, nameBox, confirmButton);
 
-        var scene = new Scene(setupView, 720, 480);
+        var scene = new Scene(setupView);
         stage.setScene(scene);
         stage.show();
 
