@@ -65,16 +65,15 @@ public class MessengerClient {
             // Send the client's username to the server.
             util.sendData(this.name, out);
 
-            System.out.println("Success. Connected to server.");
+            System.err.println("Success. Connected to server.");
             return true;
         }
         catch (SocketTimeoutException e) {
-            System.out.println("Connection timed out.");
+            System.err.println("Connection timed out.");
             return false;
         }
         catch (Exception e) {
-            System.out.println("Error: Connecting to server failed.");
-            e.printStackTrace();
+            System.err.println("Error: Connecting to server failed.");
             return false;
         }
 

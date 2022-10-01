@@ -21,8 +21,7 @@ public class UtilityFunctions {
             out.writeUTF(data);
         }
         catch (IOException e) {
-            System.out.println("Error: Failed to write data to the specified output stream.");
-            e.printStackTrace();
+            System.err.println("Error: Failed to write data to the specified output stream.");
         }
         
     }
@@ -42,8 +41,7 @@ public class UtilityFunctions {
         } catch (EOFException e) { // Without this IOFException gets caught under IOException instead of throwing to the calling function.
             throw new EOFException("End of stream reached unexpectedly.");
         } catch (IOException e) {
-            System.out.println("Error: Unable to read received data.");
-            e.printStackTrace();
+            System.err.println("Error: Unable to read received data.");
         }
         return data;
 

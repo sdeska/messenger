@@ -70,7 +70,7 @@ public class MessengerGUI extends Application {
             try {
                 client.getSocket().close();
             } catch (IOException e) {
-                System.out.println("Error: Unable to close socket.");
+                System.err.println("Error: Unable to close socket.");
             }
 
         });

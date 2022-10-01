@@ -54,7 +54,7 @@ public class MessengerServer{
             listenForConnections();
         }
         catch (IOException e) {
-            System.out.println("Error: Could not create socket.");
+            System.err.println("Error: Could not create socket.");
             e.printStackTrace();
         }
 
@@ -75,7 +75,7 @@ public class MessengerServer{
                 System.out.println("Client connected.");
             }
             catch (Exception e) {
-                System.out.println("Error: Setting up connection failed.");
+                System.err.println("Error: Setting up connection failed.");
                 e.printStackTrace();
             }
         }
