@@ -23,7 +23,7 @@ public class MessengerServer{
     private static final String password = "changeit";
 
     private static SSLServerSocket socket = null;
-    private static Map<String, ClientThread> connections = null;
+    private static Map<String, ConnectionThread> connections = null;
 
     private static UtilityFunctions util = null;
 
@@ -32,7 +32,7 @@ public class MessengerServer{
      */
     MessengerServer() {
 
-        connections = new TreeMap<String, ClientThread>();
+        connections = new TreeMap<String, ConnectionThread>();
         util = new UtilityFunctions();
 
     }
@@ -69,7 +69,7 @@ public class MessengerServer{
         while (true) {
             try {
                 SSLSocket client = (SSLSocket) socket.accept();
-                var thread = new ClientThread(client);
+                var thread = new ConnectionThread(client);
                 thread.start();
                 connections.put(thread.getName(), thread);
                 System.out.println("Client connected.");
@@ -86,7 +86,7 @@ public class MessengerServer{
      * Gets a map of all the active connections. Static for allowing access from ClientThreads.
      * @return map with usernames as keys and respective threads as the values.
      */
-    public static Map<String, ClientThread> getConnections() {
+    public static Map<String, ConnectionThread> getConnections() {
         return connections;
     }
 
