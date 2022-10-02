@@ -15,10 +15,11 @@ import fi.sdeska.messenger.utility.UtilityFunctions;
  */
 public class ConnectionThread extends Thread {
 
+    private static UtilityFunctions util = null;
+
     private SSLSocket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
-    private static UtilityFunctions util = null;
 
     /**
      * Constructor saves the socket as well as its streams, also saving the username as the thread's name.
@@ -49,7 +50,10 @@ public class ConnectionThread extends Thread {
     public void run() {
         while(true) {
             try {
-                util.readStringData(in);
+                var request = util.readStringData(in);
+                if (request.contains("Request")) {
+                    processRequest(request);
+                }
             } catch (EOFException e) {
                 System.out.println("Connection to client lost.");
                 try {
@@ -71,6 +75,37 @@ public class ConnectionThread extends Thread {
                 break;
             }
         }
+    }
+
+    /**
+     * Processes a request sent by the connected client.
+     * @param request the string containing the received request.
+     */
+    public void processRequest(String request) {
+        
+        var parameters = util.splitString(request, ":");
+        if (parameters[1].equals("Clients")) {
+            var users = createListOfClients();
+            util.sendData(users, out);
+        }
+
+    }
+
+    /**
+     * Creates a list of names for the connected clients. Does not include the name of the client connected to this thread.
+     * @return Usernames of the clients connected to the server concatenated to a string.
+     */
+    public String createListOfClients() {
+
+        var users = "";
+        for (Map.Entry<String, ConnectionThread> entry : MessengerServer.getConnections().entrySet()) {
+            if (entry.getKey().equals(this.getName())) {
+                continue;
+            }
+            users += entry.getKey() + ","; // Doesn't matter if there is a trailing comma at the end.
+        }
+        return users;
+
     }
 
 }
