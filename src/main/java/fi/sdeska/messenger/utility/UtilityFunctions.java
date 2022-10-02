@@ -9,6 +9,22 @@ import java.io.IOException;
  * Contains any general use and utility functions, which can be used by both the client and the server.
  */
 public class UtilityFunctions {
+
+    /**
+     * Splits a string by the given separator and removes any surrounding whitespaces.
+     * @param input the string to be split.
+     * @param separator the string by which to split the input.
+     * @return An array containing the separated strings.
+     */
+    public String[] splitString(String input, String separator) {
+
+        var output = input.split(separator);
+        for (int i = 0; i < output.length; i++) {
+            output[i].replaceAll("^\\s+|\\s+$", "");
+        }
+        return output;
+
+    }
     
     /**
      * Writes string data to a specified output stream.
