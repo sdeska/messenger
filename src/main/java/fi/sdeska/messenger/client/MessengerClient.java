@@ -2,7 +2,9 @@ package fi.sdeska.messenger.client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -25,12 +27,14 @@ public class MessengerClient {
     private static final String trustStore = "truststore.jts";
     private static final String password = "changeit";
     
+    private static UtilityFunctions util = null;
+
     private String name = null;
     private SSLSocket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
 
-    private static UtilityFunctions util = null;
+    private ArrayList<String> connectedClients = null;
 
     /**
      * The constructor only initializes everything which can be created before trying for a connection to the server.
@@ -39,6 +43,7 @@ public class MessengerClient {
     MessengerClient() {
 
         util = new UtilityFunctions();
+        connectedClients = new ArrayList<String>();
         System.setProperty("javax.net.ssl.trustStore", trustStore);
         System.setProperty("javax.net.ssl.trustStorePassword", password);
 
@@ -65,6 +70,8 @@ public class MessengerClient {
             // Send the client's username to the server.
             util.sendData(this.name, out);
 
+            requestClients();
+
             System.err.println("Success. Connected to server.");
             return true;
         }
@@ -75,6 +82,28 @@ public class MessengerClient {
         catch (Exception e) {
             System.err.println("Error: Connecting to server failed.");
             return false;
+        }
+
+    }
+
+    /**
+     * Sends a request to the server and obtains the usernames of other possibly connected clients.
+     */
+    public void requestClients() {
+
+        util.sendData("Request: Clients", out);
+        String response = null;
+        try {
+            response = util.readStringData(in);
+        } catch (EOFException e) {
+            System.err.println("Error: End of stream reached unexpectedly.");
+        }
+        if (response == null) {
+            return;
+        }
+        var users = util.splitString(response, ",");
+        for (var user : users) {
+            connectedClients.add(user);
         }
 
     }
