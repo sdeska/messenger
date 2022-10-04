@@ -16,6 +16,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -107,19 +108,26 @@ public class MessengerGUI extends Application {
         // Creating the contact panel displaying the contacts in the UI.
         var contactPanel = new Pane();
         contactPanel.setId("contactPanel");
-        contactPanel.setPrefWidth(240);
+        contactPanel.setMinWidth(240);
+        contactPanel.setMaxWidth(240);
         contactPanel.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         mainView.getChildren().add(contactPanel);
 
         // Creating the chat panel displaying any opened chat content.
         var chatPanel = new Pane();
         chatPanel.setId("chatPanel");
-        chatPanel.setPrefWidth(480);
+        chatPanel.setMinWidth(480);
         chatPanel.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
         mainView.getChildren().add(chatPanel);
+        HBox.setHgrow(chatPanel, Priority.ALWAYS);
 
-        stage.getScene().setRoot(mainView);
+        var scene = new Scene(mainView);
+        stage.setScene(scene);
         stage.show();
+
+    }
+
+    public void fillContactPane() {
 
     }
 
