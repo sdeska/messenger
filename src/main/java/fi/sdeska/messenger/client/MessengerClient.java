@@ -154,4 +154,8 @@ public class MessengerClient {
         return this.socket;
     }
 
+    public ArrayList<String> getConnectedClients() {
+        return this.connectedClients;
+    }
+
 }
