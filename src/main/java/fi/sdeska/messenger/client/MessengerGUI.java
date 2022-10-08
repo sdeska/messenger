@@ -106,10 +106,11 @@ public class MessengerGUI extends Application {
         mainView.setId("mainView");
 
         // Creating the contact panel displaying the contacts in the UI.
-        var contactPanel = new Pane();
+        var contactPanel = new VBox();
         contactPanel.setId("contactPanel");
         contactPanel.setMinWidth(240);
         contactPanel.setMaxWidth(240);
+        contactPanel.setMinHeight(480);
         contactPanel.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         mainView.getChildren().add(contactPanel);
 
@@ -117,17 +118,28 @@ public class MessengerGUI extends Application {
         var chatPanel = new Pane();
         chatPanel.setId("chatPanel");
         chatPanel.setMinWidth(480);
+        chatPanel.setMinHeight(480);
         chatPanel.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
         mainView.getChildren().add(chatPanel);
         HBox.setHgrow(chatPanel, Priority.ALWAYS);
 
         var scene = new Scene(mainView);
+        fillContactPane(scene);
         stage.setScene(scene);
         stage.show();
 
     }
 
-    public void fillContactPane() {
+    public void fillContactPane(Scene scene) {
+
+        if (client.getConnectedClients().isEmpty()) {
+            return;
+        }
+        var contactPanel = (VBox) scene.lookup("#contactPanel");
+        for (var contact : client.getConnectedClients()) {
+            var contactItem = new Button(contact);
+            contactPanel.getChildren().add(contactItem);
+        }
 
     }
 

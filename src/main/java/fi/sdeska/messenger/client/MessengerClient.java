@@ -94,13 +94,15 @@ public class MessengerClient {
         util.sendData("Request: Clients", out);
         String response = null;
         try {
+            util.readStringData(in); // First read always empty?????
             response = util.readStringData(in);
         } catch (EOFException e) {
             System.err.println("Error: End of stream reached unexpectedly.");
         }
-        if (response == null) {
+        if (response.isEmpty()) {
             return;
         }
+        System.out.println("Debug: \"" + response + "\"");
         var users = util.splitString(response, ",");
         for (var user : users) {
             connectedClients.add(user);

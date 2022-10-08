@@ -72,7 +72,7 @@ public class MessengerServer{
                 var thread = new ConnectionThread(client);
                 thread.start();
                 connections.put(thread.getName(), thread);
-                System.out.println("Client connected.");
+                System.out.println("Client \"" + thread.getName() + "\" connected.");
             }
             catch (Exception e) {
                 System.err.println("Error: Setting up connection failed.");
