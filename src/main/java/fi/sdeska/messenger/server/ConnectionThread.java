@@ -17,6 +17,8 @@ public class ConnectionThread extends Thread {
 
     private static UtilityFunctions util = null;
 
+    private MessengerServer server = null;
+
     private SSLSocket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
@@ -25,7 +27,8 @@ public class ConnectionThread extends Thread {
      * Constructor saves the socket as well as its streams, also saving the username as the thread's name.
      * @param socket the socket to be run on the new thread.
      */
-    ConnectionThread(SSLSocket socket) {
+    ConnectionThread(SSLSocket socket, MessengerServer server) {
+        this.server = server;
         util = new UtilityFunctions();
         this.socket = socket;
         try {
@@ -63,7 +66,7 @@ public class ConnectionThread extends Thread {
                     io.printStackTrace();
                 }
                 // Remove connection from MessengerServer's storage.
-                var threads = MessengerServer.getConnections();
+                var threads = server.getConnections();
                 for (Map.Entry<String, ConnectionThread> connection : threads.entrySet()) {
                     if (this.getName().equals(connection.getKey())) {
                         threads.remove(this.getName());
@@ -97,7 +100,7 @@ public class ConnectionThread extends Thread {
     public String createListOfClients() {
 
         var users = "";
-        var connections = MessengerServer.getConnections();
+        var connections = server.getConnections();
         if (connections.size() < 2) {
             return users;
         }
