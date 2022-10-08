@@ -69,7 +69,7 @@ public class MessengerServer{
         while (true) {
             try {
                 SSLSocket client = (SSLSocket) socket.accept();
-                var thread = new ConnectionThread(client);
+                var thread = new ConnectionThread(client, this);
                 thread.start();
                 connections.put(thread.getName(), thread);
                 System.out.println("Client \"" + thread.getName() + "\" connected.");
@@ -83,10 +83,10 @@ public class MessengerServer{
     }
 
     /**
-     * Gets a map of all the active connections. Static for allowing access from ClientThreads.
+     * Gets a map of all the active connections.
      * @return map with usernames as keys and respective threads as the values.
      */
-    public static Map<String, ConnectionThread> getConnections() {
+    public Map<String, ConnectionThread> getConnections() {
         return connections;
     }
 
