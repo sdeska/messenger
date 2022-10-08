@@ -32,7 +32,7 @@ public class ConnectionThread extends Thread {
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
-            System.out.println("Error: Failed to get data streams for client's socket.");
+            System.err.println("Error: Failed to get data streams for client's socket.");
             e.printStackTrace();
         }
         // Sending initial bogus data so that the clientside handshake method does not get blocked.
@@ -59,7 +59,7 @@ public class ConnectionThread extends Thread {
                 try {
                     socket.close();
                 } catch (IOException io) {
-                    System.out.println("Error: Could not close socket.");
+                    System.err.println("Error: Could not close socket.");
                     io.printStackTrace();
                 }
                 // Remove connection from MessengerServer's storage.
@@ -83,8 +83,7 @@ public class ConnectionThread extends Thread {
      */
     public void processRequest(String request) {
         
-        var parameters = util.splitString(request, ":");
-        if (parameters[1].equals("Clients")) {
+        if (request.contains("Clients")) {
             var users = createListOfClients();
             util.sendData(users, out);
         }
@@ -98,12 +97,17 @@ public class ConnectionThread extends Thread {
     public String createListOfClients() {
 
         var users = "";
-        for (Map.Entry<String, ConnectionThread> entry : MessengerServer.getConnections().entrySet()) {
+        var connections = MessengerServer.getConnections();
+        if (connections.size() < 2) {
+            return users;
+        }
+        for (Map.Entry<String, ConnectionThread> entry : connections.entrySet()) {
             if (entry.getKey().equals(this.getName())) {
                 continue;
             }
-            users += entry.getKey() + ","; // Doesn't matter if there is a trailing comma at the end.
+            users += entry.getKey() + ",";
         }
+        users = users.substring(0, users.length() - 1); // Remove trailing comma.
         return users;
 
     }
