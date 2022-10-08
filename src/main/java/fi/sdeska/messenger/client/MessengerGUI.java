@@ -107,6 +107,7 @@ public class MessengerGUI extends Application {
 
         // Creating the contact panel displaying the contacts in the UI.
         var contactPanel = new VBox();
+        contactPanel.setAlignment(Pos.TOP_CENTER);
         contactPanel.setId("contactPanel");
         contactPanel.setMinWidth(240);
         contactPanel.setMaxWidth(240);
@@ -138,6 +139,10 @@ public class MessengerGUI extends Application {
         var contactPanel = (VBox) scene.lookup("#contactPanel");
         for (var contact : client.getConnectedClients()) {
             var contactItem = new Button(contact);
+            contactItem.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
+            contactItem.setStyle("-fx-border-color: #303030; -fx-border-width: 1px;");
+            contactItem.setMinWidth(240);
+            contactItem.setMaxWidth(240);
             contactPanel.getChildren().add(contactItem);
         }
 
