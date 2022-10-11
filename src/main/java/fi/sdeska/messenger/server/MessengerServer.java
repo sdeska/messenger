@@ -13,7 +13,7 @@ import fi.sdeska.messenger.utility.UtilityFunctions;
 /**
  * Handles the main functionality of the server and listening for and accepting new connection requests.
  */
-public class MessengerServer{
+public class MessengerServer {
 
     private final String[] protocols = new String[]{"TLSv1.3"};
     private final String[] ciphers = new String[]{"TLS_AES_128_GCM_SHA256"};

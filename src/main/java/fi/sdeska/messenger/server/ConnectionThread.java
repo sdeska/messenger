@@ -40,11 +40,14 @@ public class ConnectionThread extends Thread {
         }
         // Sending initial bogus data so that the clientside handshake method does not get blocked.
         util.sendData("", out);
+        // Receiving name from the client.
         try {
             this.setName(util.readStringData(in));
         } catch (EOFException e) {
             e.printStackTrace();
         }
+        // Sending other connected clients to the new client.
+        util.sendData(createListOfClients(), out);
     }
 
     /**
@@ -101,13 +104,10 @@ public class ConnectionThread extends Thread {
 
         var users = "";
         var connections = server.getConnections();
-        if (connections.size() < 2) {
+        if (connections.size() == 0) {
             return users;
         }
         for (Map.Entry<String, ConnectionThread> entry : connections.entrySet()) {
-            if (entry.getKey().equals(this.getName())) {
-                continue;
-            }
             users += entry.getKey() + ",";
         }
         users = users.substring(0, users.length() - 1); // Remove trailing comma.
