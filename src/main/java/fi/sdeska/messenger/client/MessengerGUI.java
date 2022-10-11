@@ -3,6 +3,7 @@ package fi.sdeska.messenger.client;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -27,6 +28,8 @@ import javafx.stage.Stage;
 public class MessengerGUI extends Application {
     
     private MessengerClient client = null;
+    
+    private Stage stage = null;
 
     /**
      * Initializes the application and displays a view asking for an username.
@@ -37,7 +40,8 @@ public class MessengerGUI extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         
-        client = new MessengerClient();
+        this.stage = stage;
+        client = new MessengerClient(this);
         stage.setTitle("Messenger");
         stage.setMinHeight(480);
         stage.setMinWidth(720);
@@ -125,26 +129,31 @@ public class MessengerGUI extends Application {
         HBox.setHgrow(chatPanel, Priority.ALWAYS);
 
         var scene = new Scene(mainView);
-        fillContactPane(scene);
         stage.setScene(scene);
         stage.show();
 
     }
 
-    public void fillContactPane(Scene scene) {
+    public void updateContactPane() {
 
         if (client.getConnectedClients().isEmpty()) {
             return;
         }
-        var contactPanel = (VBox) scene.lookup("#contactPanel");
-        for (var contact : client.getConnectedClients()) {
-            var contactItem = new Button(contact);
-            contactItem.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
-            contactItem.setStyle("-fx-border-color: #303030; -fx-border-width: 1px;");
-            contactItem.setMinWidth(240);
-            contactItem.setMaxWidth(240);
-            contactPanel.getChildren().add(contactItem);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                var contactPanel = (VBox) stage.getScene().lookup("#contactPanel");
+                contactPanel.getChildren().clear();
+                for (var contact : client.getConnectedClients()) {
+                    var contactItem = new Button(contact);
+                    contactItem.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
+                    contactItem.setStyle("-fx-border-color: #303030; -fx-border-width: 1px;");
+                    contactItem.setMinWidth(240);
+                    contactItem.setMaxWidth(240);
+                    contactPanel.getChildren().add(contactItem);
+                }
+            }
+        });
 
     }
 
