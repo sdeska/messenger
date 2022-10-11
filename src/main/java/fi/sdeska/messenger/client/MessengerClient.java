@@ -28,6 +28,7 @@ public class MessengerClient {
     private static final String password = "changeit";
     
     private static UtilityFunctions util = null;
+    private MessengerGUI gui = null;
 
     private String name = null;
     private SSLSocket socket = null;
@@ -41,8 +42,9 @@ public class MessengerClient {
      * The constructor only initializes everything which can be created before trying for a connection to the server.
      * The actual connection establishment related operations are performed in connectToServer().
      */
-    MessengerClient() {
+    MessengerClient(MessengerGUI gui) {
 
+        this.gui = gui;
         util = new UtilityFunctions();
         connectedClients = new ArrayList<String>();
         System.setProperty("javax.net.ssl.trustStore", trustStore);
@@ -129,9 +131,13 @@ public class MessengerClient {
         }
         var users = util.splitString(userString, ",");
         for (var user : users) {
+            if (connectedClients.contains(user)) {
+                continue;
+            }
             connectedClients.add(user);
             System.out.println("Added client " + user);
         }
+        gui.updateContactPane();
 
     }
 
