@@ -64,6 +64,7 @@ public class MessengerClient {
             socket.setUseClientMode(true);
             socket.setSoTimeout(5000);
             socket.startHandshake();
+            socket.setSoTimeout(0);
 
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
@@ -76,6 +77,7 @@ public class MessengerClient {
             addClients(util.readStringData(in));
 
             listen = new ListeningThread(this);
+            listen.start();
 
             System.err.println("Success. Connected to server.");
             return true;
@@ -128,6 +130,7 @@ public class MessengerClient {
         var users = util.splitString(userString, ",");
         for (var user : users) {
             connectedClients.add(user);
+            System.out.println("Added client " + user);
         }
 
     }

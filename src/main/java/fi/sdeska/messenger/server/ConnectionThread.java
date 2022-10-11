@@ -84,6 +84,24 @@ public class ConnectionThread extends Thread {
     }
 
     /**
+     * Sends information about a change in the client list to the client.
+     * @param name the name of the added/removed client.
+     * @param op true if the client was added, false if removed.
+     */
+    public void informOfClientlistChange(String name, boolean op) {
+        
+        String message = null;
+        if (op == true) {
+            message = "Client-Addition:" + name;
+        }
+        else {
+            message = "Client-Removal:" + name;
+        }
+        util.sendData(message, out);
+
+    }
+
+    /**
      * Processes a request sent by the connected client.
      * @param request the string containing the received request.
      */

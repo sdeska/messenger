@@ -7,7 +7,7 @@ import java.io.EOFException;
 import fi.sdeska.messenger.utility.UtilityFunctions;
 
 /**
- * Handles listening for and reacting to messages coming from the connected server on the client side. 
+ * Handles listening for and reacting to messages coming from the connected server on the client side.
  * This allows for exchanges of data which have been initiated by the server instead of the client.
  */
 public class ListeningThread extends Thread {
@@ -42,12 +42,12 @@ public class ListeningThread extends Thread {
                 continue;
             }
             if (received.contains("Client-Addition")) {
-                received.replace("Client-Addition:", "");
-                client.addClients(received);
+                var name = received.replace("Client-Addition:", "");
+                client.addClients(name);
             }
             else if (received.contains("Client-Removal")) {
-                received.replace("Client-Removal:", "");
-                client.removeClient(received);
+                var name = received.replace("Client-Removal:", "");
+                client.removeClient(name);
             }
         }
 
