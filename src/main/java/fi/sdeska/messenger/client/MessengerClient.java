@@ -33,6 +33,7 @@ public class MessengerClient {
     private SSLSocket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
+    private ListeningThread listen = null;
 
     private ArrayList<String> connectedClients = null;
 
@@ -70,7 +71,11 @@ public class MessengerClient {
             // Send the client's username to the server.
             util.sendData(this.name, out);
 
-            requestClients();
+            // Receive connected clients from server and save them.
+            util.readStringData(in); // First read always empty???
+            addClients(util.readStringData(in));
+
+            listen = new ListeningThread(this);
 
             System.err.println("Success. Connected to server.");
             return true;
@@ -88,6 +93,7 @@ public class MessengerClient {
 
     /**
      * Sends a request to the server and obtains the usernames of other possibly connected clients.
+     * @deprecated Never needed to specifically request a list of clients from the server anymore.
      */
     public void requestClients() {
 
@@ -107,6 +113,32 @@ public class MessengerClient {
         for (var user : users) {
             connectedClients.add(user);
         }
+
+    }
+
+    /**
+     * Adds to the list of clients which are connected to the same server. Immediately returns if the parameter is an empty string.
+     * @param userString a string containing the username(s) to add. Multiples are separated by commas.
+     */
+    public void addClients(String userString) {
+        
+        if (userString.isEmpty()) {
+            return;
+        }
+        var users = util.splitString(userString, ",");
+        for (var user : users) {
+            connectedClients.add(user);
+        }
+
+    }
+
+    /**
+     * Removes a client from the list of connected clients.
+     * @param username username of the client to remove.
+     */
+    public void removeClient(String username) {
+
+        connectedClients.remove(username);
 
     }
     
@@ -154,6 +186,14 @@ public class MessengerClient {
      */
     public SSLSocket getSocket() {
         return this.socket;
+    }
+
+    public DataInputStream getIn() {
+        return in;
+    }
+
+    public DataOutputStream getOut() {
+        return out;
     }
 
     public ArrayList<String> getConnectedClients() {
