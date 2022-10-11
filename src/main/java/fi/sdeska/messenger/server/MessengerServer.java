@@ -67,17 +67,22 @@ public class MessengerServer {
 
         System.out.println("Waiting for connections...");
         while (true) {
+            SSLSocket client = null;
             try {
-                SSLSocket client = (SSLSocket) socket.accept();
-                var thread = new ConnectionThread(client, this);
-                thread.start();
-                connections.put(thread.getName(), thread);
-                System.out.println("Client \"" + thread.getName() + "\" connected.");
+                client = (SSLSocket) socket.accept();
             }
             catch (Exception e) {
                 System.err.println("Error: Setting up connection failed.");
                 e.printStackTrace();
             }
+            var thread = new ConnectionThread(client, this);
+            thread.start();
+            // Info all existing clients about the new connection.
+            for (Map.Entry<String, ConnectionThread> entry : connections.entrySet()) {
+                entry.getValue().informOfClientlistChange(thread.getName(), true);
+            }
+            connections.put(thread.getName(), thread);
+            System.out.println("Client \"" + thread.getName() + "\" connected.");
         }
 
     }
