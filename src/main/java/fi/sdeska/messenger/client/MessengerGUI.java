@@ -134,6 +134,9 @@ public class MessengerGUI extends Application {
 
     }
 
+    /**
+     * Refreshes the contact panel that displays other clients connected to the server.
+     */
     public void updateContactPane() {
 
         if (client.getConnectedClients().isEmpty()) {

@@ -11,7 +11,7 @@ import javax.net.ssl.SSLSocket;
 import fi.sdeska.messenger.utility.UtilityFunctions;
 
 /**
- * Handles the operations of a single client connection on the server. Sould always be run on a separate thread.
+ * Handles the operations of a single client connection on the server. Should always be run on a separate thread.
  */
 public class ConnectionThread extends Thread {
 
@@ -51,8 +51,9 @@ public class ConnectionThread extends Thread {
     }
 
     /**
-     * Overridden run() method of Thread class. Allocates an instance of ClientThread and runs it on its own thread.
+     * Overridden run() method of Thread class. Allocates an instance of ConnectionThread and runs it on its own thread.
      */
+    @Override
     public void run() {
         while(true) {
             try {

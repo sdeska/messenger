@@ -43,7 +43,7 @@ public class UtilityFunctions {
     }
     
     /**
-     * Reads data from an input stream. Blocks execution until data is written to the input stream.
+     * Reads string data from an input stream. Blocks execution until data is written to the input stream.
      * @param in The DataInputStream from which to read data from.
      * @return The data read from the stream.
      * @throws EOFException Thrown if the stream connection is unexpectedly closed.
