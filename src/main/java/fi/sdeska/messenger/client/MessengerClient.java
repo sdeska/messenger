@@ -15,7 +15,7 @@ import fi.sdeska.messenger.utility.UtilityFunctions;
 
 /**
  * Handles the backend of the clientside application. 
- * This includes the connections to the server and other clients.
+ * This includes the connections to the server and possible other clients.
  */
 public class MessengerClient {
 
@@ -131,7 +131,7 @@ public class MessengerClient {
     }
 
     /**
-     * Adds to the list of clients which are connected to the same server. Immediately returns if the parameter is an empty string.
+     * Adds to the list of clients which are connected to the same server. Immediately returns without doing anything if the parameter is an empty string.
      * @param userString a string containing the username(s) to add. Multiples are separated by commas.
      */
     public void addClients(String userString) {
@@ -162,7 +162,7 @@ public class MessengerClient {
     }
     
     /**
-     * Used for setting the client's username. This name is currently used for client identification,
+     * Used for setting the client's username. The name set by this method is currently used for client identification,
      * meaning that duplicate usernames cannot be used.
      * @param name cannot be empty.
      * @return true if name successfully set, false otherwise.
@@ -207,14 +207,26 @@ public class MessengerClient {
         return this.socket;
     }
 
+    /**
+     * Gets the data input stream associated with the socket connected to the server. Used for reading data sent by the server.
+     * @return the data input stream associated with the server.
+     */
     public DataInputStream getIn() {
         return in;
     }
 
+    /**
+     * Gets the data output stream associated with the socket connected to the server. Used for sending data to the server.
+     * @return the data output stream associated with the server.
+     */
     public DataOutputStream getOut() {
         return out;
     }
 
+    /**
+     * Gets an arraylist containing the usernames of all the clients connected to the same server according to the latest info by the server.
+     * @return the arraylist of clients.
+     */
     public ArrayList<String> getConnectedClients() {
         return this.connectedClients;
     }

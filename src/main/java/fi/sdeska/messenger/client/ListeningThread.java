@@ -7,7 +7,7 @@ import java.io.EOFException;
 import fi.sdeska.messenger.utility.UtilityFunctions;
 
 /**
- * Handles listening for and reacting to messages coming from the connected server on the client side.
+ * Handles listening for and reacting to messages coming from the connected server.
  * This allows for exchanges of data which have been initiated by the server instead of the client.
  */
 public class ListeningThread extends Thread {
@@ -31,8 +31,11 @@ public class ListeningThread extends Thread {
     
     }
 
+    /**
+     * Overridden run() method of Thread class. Allocates an instance of ListeningThread and runs it on its own thread.
+     */
+    @Override
     public void run() {
-        
         while (true) {
             String received = "";
             try {
@@ -50,7 +53,6 @@ public class ListeningThread extends Thread {
                 client.removeClient(name);
             }
         }
-
     }
 
 }
