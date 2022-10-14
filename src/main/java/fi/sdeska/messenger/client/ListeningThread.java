@@ -41,8 +41,9 @@ public class ListeningThread extends Thread {
             try {
                 received = util.readStringData(in);
             } catch (EOFException e) {
-                System.err.println("Error: End of stream reached unexpectedly.");
-                continue;
+                System.out.println("Closing listening thread.");
+                // Close thread by breaking out of the run() loop.
+                break;
             }
             if (received.contains("Client-Addition")) {
                 var name = received.replace("Client-Addition:", "");
