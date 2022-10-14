@@ -139,9 +139,6 @@ public class MessengerGUI extends Application {
      */
     public void updateContactPane() {
 
-        if (client.getConnectedClients().isEmpty()) {
-            return;
-        }
         Platform.runLater(new Runnable() {
             @Override
             public void run() {

@@ -69,8 +69,12 @@ public class ConnectionThread extends Thread {
                     System.err.println("Error: Could not close socket.");
                     io.printStackTrace();
                 }
+                var threads = server.getConnections();
                 // Remove connection from MessengerServer's storage.
-                server.getConnections().remove(this.getName());
+                threads.remove(this.getName());
+                for (Map.Entry<String, ConnectionThread> client : threads.entrySet()) {
+                    client.getValue().informOfClientlistChange(this.getName(), false);
+                }
                 System.out.println("Ending client thread.");
                 // Stop executing thread by breaking out of run().
                 break;
