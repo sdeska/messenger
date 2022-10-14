@@ -70,13 +70,7 @@ public class ConnectionThread extends Thread {
                     io.printStackTrace();
                 }
                 // Remove connection from MessengerServer's storage.
-                var threads = server.getConnections();
-                for (Map.Entry<String, ConnectionThread> connection : threads.entrySet()) {
-                    if (this.getName().equals(connection.getKey())) {
-                        threads.remove(this.getName());
-                        break;
-                    }
-                }
+                server.getConnections().remove(this.getName());
                 System.out.println("Ending client thread.");
                 // Stop executing thread by breaking out of run().
                 break;
