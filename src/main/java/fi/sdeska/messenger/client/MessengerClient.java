@@ -158,6 +158,8 @@ public class MessengerClient {
     public void removeClient(String username) {
 
         connectedClients.remove(username);
+        System.out.println("Removed client " + username);
+        gui.updateContactPane();
 
     }
     
