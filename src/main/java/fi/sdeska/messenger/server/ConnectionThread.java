@@ -2,7 +2,6 @@ package fi.sdeska.messenger.server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.util.Map;
 
@@ -43,7 +42,7 @@ public class ConnectionThread extends Thread {
         // Receiving name from the client.
         try {
             this.setName(util.readStringData(in));
-        } catch (EOFException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         // Sending other connected clients to the new client.
@@ -61,7 +60,7 @@ public class ConnectionThread extends Thread {
                 if (request.contains("Request")) {
                     processRequest(request);
                 }
-            } catch (EOFException e) {
+            } catch (IOException e) {
                 System.out.println("Connection to client lost.");
                 try {
                     socket.close();
