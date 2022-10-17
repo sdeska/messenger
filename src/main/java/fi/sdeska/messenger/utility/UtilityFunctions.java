@@ -49,16 +49,17 @@ public class UtilityFunctions {
      * @throws EOFException Thrown if the stream connection is unexpectedly closed.
      * This most likely means that the connection was lost and the socket may be closed on the reader side.
      */
-    public String readStringData(DataInputStream in) throws EOFException {
+    public String readStringData(DataInputStream in) throws EOFException, IOException {
 
         String data = "";
-        try {
+        data = in.readUTF();
+        /*try {
             data = in.readUTF();
         } catch (EOFException e) { // Without this IOFException gets caught under IOException instead of throwing to the calling function.
             throw new EOFException("End of stream reached unexpectedly.");
         } catch (IOException e) {
             System.err.println("Error: Unable to read received data.");
-        }
+        }*/
         return data;
 
     }

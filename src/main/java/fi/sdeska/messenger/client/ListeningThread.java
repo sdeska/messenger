@@ -2,7 +2,7 @@ package fi.sdeska.messenger.client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.EOFException;
+import java.io.IOException;
 
 import fi.sdeska.messenger.utility.UtilityFunctions;
 
@@ -18,12 +18,15 @@ public class ListeningThread extends Thread {
     private DataInputStream in = null;
     private DataOutputStream out = null;
 
+    private boolean running;
+
     /**
      * The constructor simply saves the client for which this thread is listening for incoming communication and initializes any required variables.
      * @param client the client which uses this thread.
      */
     ListeningThread(MessengerClient client) {
-    
+
+        running = true;
         util = new UtilityFunctions();
         this.client = client;
         in = client.getIn();
@@ -37,10 +40,14 @@ public class ListeningThread extends Thread {
     @Override
     public void run() {
         while (true) {
+            // Close thread if variable 'running' is false.
+            if (!running) {
+                break;
+            }
             String received = "";
             try {
                 received = util.readStringData(in);
-            } catch (EOFException e) {
+            } catch (IOException e) {
                 System.out.println("Closing listening thread.");
                 // Close thread by breaking out of the run() loop.
                 break;
@@ -54,6 +61,13 @@ public class ListeningThread extends Thread {
                 client.removeClient(name);
             }
         }
+    }
+
+    /**
+     * Ends the thread by setting running to false.
+     */
+    public void endListeningThread() {
+        running = false;
     }
 
 }

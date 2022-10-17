@@ -74,6 +74,7 @@ public class MessengerGUI extends Application {
             }
             try {
                 client.getSocket().close();
+                client.getListeningThread().endListeningThread();
             } catch (IOException e) {
                 System.err.println("Error: Unable to close socket.");
             }

@@ -3,6 +3,7 @@ package fi.sdeska.messenger.client;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
@@ -118,6 +119,8 @@ public class MessengerClient {
             response = util.readStringData(in);
         } catch (EOFException e) {
             System.err.println("Error: End of stream reached unexpectedly.");
+        } catch (IOException e) {
+            System.err.println("Error: Could not read received data");
         }
         if (response.isEmpty()) {
             return;
@@ -131,7 +134,8 @@ public class MessengerClient {
     }
 
     /**
-     * Adds to the list of clients which are connected to the same server. Immediately returns without doing anything if the parameter is an empty string.
+     * Adds to the list of clients which are connected to the same server. 
+     * Immediately returns without doing anything if the parameter is an empty string.
      * @param userString a string containing the username(s) to add. Multiples are separated by commas.
      */
     public void addClients(String userString) {
@@ -223,6 +227,15 @@ public class MessengerClient {
      */
     public DataOutputStream getOut() {
         return out;
+    }
+
+    /**
+     * Gets the listening thread associated with this client. All incoming network traffic is read by this thread after the constructor 
+     * of this MessengerClient instance is finished.
+     * @return the listening thread.
+     */
+    public ListeningThread getListeningThread() {
+        return listen;
     }
 
     /**
