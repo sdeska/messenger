@@ -16,7 +16,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -30,6 +29,8 @@ public class MessengerGUI extends Application {
     private MessengerClient client = null;
     
     private Stage stage = null;
+
+    private String activeChat = "";
 
     /**
      * Initializes the application and displays a view asking for an username.
@@ -95,8 +96,8 @@ public class MessengerGUI extends Application {
                     return;
                 }
                 startMainView(stage);
-            }
 
+            }
         });
 
     }
@@ -121,7 +122,7 @@ public class MessengerGUI extends Application {
         mainView.getChildren().add(contactPanel);
 
         // Creating the chat panel displaying any opened chat content.
-        var chatPanel = new Pane();
+        var chatPanel = new VBox();
         chatPanel.setId("chatPanel");
         chatPanel.setMinWidth(480);
         chatPanel.setMinHeight(480);
@@ -137,13 +138,15 @@ public class MessengerGUI extends Application {
 
     /**
      * Refreshes the contact panel that displays other clients connected to the server.
+     * Uses Platform.runLater() so that the GUI is always modified from the JavaFX thread instead of the calling thread (most likely ListeningThread).
      */
     public void updateContactPane() {
 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                var contactPanel = (VBox) stage.getScene().lookup("#contactPanel");
+                
+                var contactPanel = (VBox) stage.getScene().getRoot().lookup("#contactPanel");
                 contactPanel.getChildren().clear();
                 for (var contact : client.getConnectedClients()) {
                     var contactItem = new Button(contact);
@@ -153,8 +156,43 @@ public class MessengerGUI extends Application {
                     contactItem.setMaxWidth(240);
                     contactPanel.getChildren().add(contactItem);
                 }
+
+                // Add event handlers for the client entries on contact panel.
+                for (var contact : contactPanel.getChildren()) {
+            
+                    var contactButton = (Button) contact;
+                    contactButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+            
+                            if (activeChat.equals(contactButton.getText())) {
+                                return;
+                            }
+                            initializeChatView();
+                            
+                        }
+                    });
+                }
             }
         });
+
+    }
+
+    /**
+     * Initializes the contents of the chat panel.
+     */
+    public void initializeChatView() {
+
+        var messageView = new VBox();
+        messageView.setMinHeight(460);
+
+        var textField = new TextField();
+        textField.setId("textField");
+        textField.setAlignment(Pos.BOTTOM_CENTER);
+
+        var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
+        chatPanel.getChildren().clear();
+        chatPanel.getChildren().addAll(messageView, textField);
 
     }
 
