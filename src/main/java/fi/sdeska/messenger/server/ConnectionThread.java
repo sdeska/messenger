@@ -61,7 +61,7 @@ public class ConnectionThread extends Thread {
                     processRequest(request);
                 }
             } catch (IOException e) {
-                System.out.println("Connection to client lost.");
+                System.out.println("Connection to client \"" + this.getName() + "\" lost.");
                 try {
                     socket.close();
                 } catch (IOException io) {
