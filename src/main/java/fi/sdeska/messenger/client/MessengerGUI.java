@@ -133,7 +133,9 @@ public class MessengerGUI extends Application {
         mainView.getChildren().add(chatPanel);
         HBox.setHgrow(chatPanel, Priority.ALWAYS);
 
-        var scene = new Scene(mainView);
+        // Use the dimensions of the setup scene for the new scene and set the new scene to the stage.
+        var oldScene = stage.getScene();
+        var scene = new Scene(mainView, oldScene.getWidth(), oldScene.getHeight());
         stage.setScene(scene);
         stage.show();
 
