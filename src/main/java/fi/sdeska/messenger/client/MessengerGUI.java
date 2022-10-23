@@ -186,16 +186,28 @@ public class MessengerGUI extends Application {
      */
     public void initializeChatView() {
 
+        // Add the view that will contain the send and received messages.
         var messageView = new VBox();
+        messageView.setId("messageView");
         VBox.setVgrow(messageView, Priority.ALWAYS);
 
+        // Add a textfield and a send button to the bottom of the chatview.
+        var sendButton = new Button("Send");
+        sendButton.setId("sendButton");
         var textField = new TextField();
         textField.setId("textField");
         textField.setAlignment(Pos.BOTTOM_CENTER);
+        textField.setMinWidth(minWindowWidth * 0.7 - 50);
+        var messageBar = new HBox();
+        messageBar.setId("messageBar");
+        messageBar.setMinWidth(minWindowWidth * 0.7);
+        HBox.setHgrow(textField, Priority.ALWAYS);
+        messageBar.getChildren().addAll(textField, sendButton);
 
+        // Display the created elements in the chat panel.
         var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
         chatPanel.getChildren().clear();
-        chatPanel.getChildren().addAll(messageView, textField);
+        chatPanel.getChildren().addAll(messageView, messageBar);
 
     }
 
