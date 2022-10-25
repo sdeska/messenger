@@ -15,25 +15,24 @@ import fi.sdeska.messenger.utility.UtilityFunctions;
  */
 public class MessengerServer {
 
-    private final String[] protocols = new String[]{"TLSv1.3"};
-    private final String[] ciphers = new String[]{"TLS_AES_128_GCM_SHA256"};
-    private final int serverPort = 29999;
+    private static UtilityFunctions util = new UtilityFunctions();
 
-    private static final String keyStore = "keystore.jks";
-    private static final String password = "changeit";
+    private static final String[] PROTOCOLS = new String[]{"TLSv1.3"};
+    private static final String[] CIPHERS = new String[]{"TLS_AES_128_GCM_SHA256"};
+    private static final int SERVERPORT = 29999;
 
-    private static SSLServerSocket socket = null;
-    private static Map<String, ConnectionThread> connections = null;
+    private static final String KEYSTORE = "keystore.jks";
+    private static final String PASSWORD = "changeit";
 
-    private static UtilityFunctions util = null;
+    private SSLServerSocket socket = null;
+    private Map<String, ConnectionThread> connections = null;
 
     /**
-     * The constructor initializes the container for the client connections and the instance of UtilityFunctions.
+     * The constructor initializes the container for the client connections.
      */
     MessengerServer() {
 
-        connections = new TreeMap<String, ConnectionThread>();
-        util = new UtilityFunctions();
+        connections = new TreeMap<>();
 
     }
 
@@ -42,14 +41,14 @@ public class MessengerServer {
      */
     public void startServer() {
 
-        System.setProperty("javax.net.ssl.keyStore", keyStore);
-        System.setProperty("javax.net.ssl.keyStorePassword", password);
+        System.setProperty("javax.net.ssl.keyStore", KEYSTORE);
+        System.setProperty("javax.net.ssl.keyStorePassword", PASSWORD);
 
         try {
             SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-            socket = (SSLServerSocket) ssf.createServerSocket(serverPort);
-            socket.setEnabledProtocols(protocols);
-            socket.setEnabledCipherSuites(ciphers);
+            socket = (SSLServerSocket) ssf.createServerSocket(SERVERPORT);
+            socket.setEnabledProtocols(PROTOCOLS);
+            socket.setEnabledCipherSuites(CIPHERS);
             System.out.println("Server started.");
             listenForConnections();
         }

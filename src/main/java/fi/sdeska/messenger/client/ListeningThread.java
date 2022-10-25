@@ -12,7 +12,7 @@ import fi.sdeska.messenger.utility.UtilityFunctions;
  */
 public class ListeningThread extends Thread {
     
-    private static UtilityFunctions util = null;
+    private static UtilityFunctions util = new UtilityFunctions();
 
     private MessengerClient client = null;
     private DataInputStream in = null;
@@ -27,7 +27,6 @@ public class ListeningThread extends Thread {
     ListeningThread(MessengerClient client) {
 
         running = true;
-        util = new UtilityFunctions();
         this.client = client;
         in = client.getIn();
         out = client.getOut();

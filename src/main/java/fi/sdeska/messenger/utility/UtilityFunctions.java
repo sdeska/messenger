@@ -18,9 +18,10 @@ public class UtilityFunctions {
      */
     public String[] splitString(String input, String separator) {
 
-        var output = input.split(separator);
-        for (int i = 0; i < output.length; i++) {
-            output[i].replaceAll("^\\s+|\\s+$", "");
+        var splitInput = input.split(separator);
+        String[] output = new String[splitInput.length];
+        for (int i = 0; i < splitInput.length; i++) {
+            output[i] = splitInput[i].replaceAll("^\\s+|\\s+$", "");
         }
         return output;
 
@@ -53,13 +54,6 @@ public class UtilityFunctions {
 
         String data = "";
         data = in.readUTF();
-        /*try {
-            data = in.readUTF();
-        } catch (EOFException e) { // Without this IOFException gets caught under IOException instead of throwing to the calling function.
-            throw new EOFException("End of stream reached unexpectedly.");
-        } catch (IOException e) {
-            System.err.println("Error: Unable to read received data.");
-        }*/
         return data;
 
     }

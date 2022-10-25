@@ -6,6 +6,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -22,13 +23,13 @@ public class MessengerClient {
 
     private static final String[] protocols = new String[]{"TLSv1.3"};
     private static final String[] ciphers = new String[]{"TLS_AES_128_GCM_SHA256"};
-    private String host = new String("127.0.0.1");
-    private static final int port = 29999;
+    private String host = "127.0.0.1";
+    private static final int SERVERPORT = 29999;
 
-    private static final String trustStore = "truststore.jts";
-    private static final String password = "changeit";
+    private static final String TRUSTSTORE = "truststore.jts";
+    private static final String PASSWORD = "changeit";
     
-    private static UtilityFunctions util = null;
+    private static UtilityFunctions util = new UtilityFunctions();
     private MessengerGUI gui = null;
 
     private String name = null;
@@ -45,10 +46,9 @@ public class MessengerClient {
      */
     MessengerClient() {
 
-        util = new UtilityFunctions();
         connectedClients = new ArrayList<String>();
-        System.setProperty("javax.net.ssl.trustStore", trustStore);
-        System.setProperty("javax.net.ssl.trustStorePassword", password);
+        System.setProperty("javax.net.ssl.trustStore", TRUSTSTORE);
+        System.setProperty("javax.net.ssl.trustStorePassword", PASSWORD);
 
     }
     
@@ -71,7 +71,7 @@ public class MessengerClient {
 
         try {
             SSLSocketFactory ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
-            socket = (SSLSocket) ssf.createSocket(host, port);
+            socket = (SSLSocket) ssf.createSocket(host, SERVERPORT);
             socket.setEnabledProtocols(protocols);
             socket.setEnabledCipherSuites(ciphers);
             socket.setUseClientMode(true);
@@ -110,6 +110,7 @@ public class MessengerClient {
      * Sends a request to the server and obtains the usernames of other possibly connected clients.
      * @deprecated Never needed to specifically request a list of clients from the server anymore.
      */
+    @Deprecated
     public void requestClients() {
 
         util.sendData("Request: Clients", out);
@@ -122,14 +123,12 @@ public class MessengerClient {
         } catch (IOException e) {
             System.err.println("Error: Could not read received data");
         }
-        if (response.isEmpty()) {
+        if (response == null || response.isEmpty()) {
             return;
         }
         System.out.println("Debug: \"" + response + "\"");
         var users = util.splitString(response, ",");
-        for (var user : users) {
-            connectedClients.add(user);
-        }
+        connectedClients = new ArrayList<>(Arrays.asList(users));
 
     }
 

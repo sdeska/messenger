@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -86,21 +84,19 @@ public class MessengerGUI extends Application {
         });
 
         // Adding an eventhandler for the connect-button.
-        confirmButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
+        confirmButton.setOnAction((action) -> {
 
-                if (!client.setName(nameBox.getText())) {
-                    nameLabel.setText("Please enter a non-empty name.");
-                    return;
-                }
-                if (!client.connectToServer()) {
-                    nameLabel.setText("Connecting to server failed. Please contact the server administrator.");
-                    return;
-                }
-                startMainView(stage);
-
+            if (!client.setName(nameBox.getText())) {
+                nameLabel.setText("Please enter a non-empty name.");
+                return;
             }
+            if (!client.connectToServer()) {
+                nameLabel.setText("Connecting to server failed. Please contact the server administrator.");
+                return;
+            }
+            startMainView(stage);
+
+            
         });
 
     }
@@ -147,37 +143,31 @@ public class MessengerGUI extends Application {
      */
     public void updateContactPane() {
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
+        Platform.runLater(() -> {
                 
-                var contactPanel = (VBox) stage.getScene().getRoot().lookup("#contactPanel");
-                contactPanel.getChildren().clear();
-                for (var contact : client.getConnectedClients()) {
-                    var contactItem = new Button(contact);
-                    contactItem.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
-                    contactItem.setStyle("-fx-border-color: #303030; -fx-border-width: 1px;");
-                    contactItem.setMinWidth(minWindowWidth * 0.3);
-                    contactItem.setMaxWidth(minWindowWidth * 0.3);
-                    contactPanel.getChildren().add(contactItem);
-                }
+            var contactPanel = (VBox) stage.getScene().getRoot().lookup("#contactPanel");
+            contactPanel.getChildren().clear();
+            for (var contact : client.getConnectedClients()) {
+                var contactItem = new Button(contact);
+                contactItem.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
+                contactItem.setStyle("-fx-border-color: #303030; -fx-border-width: 1px;");
+                contactItem.setMinWidth(minWindowWidth * 0.3);
+                contactItem.setMaxWidth(minWindowWidth * 0.3);
+                contactPanel.getChildren().add(contactItem);
+            }
 
-                // Add event handlers for the client entries on contact panel.
-                for (var contact : contactPanel.getChildren()) {
-            
-                    var contactButton = (Button) contact;
-                    contactButton.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent e) {
-            
-                            if (activeChat.equals(contactButton.getText())) {
-                                return;
-                            }
-                            initializeChatView();
-                            
-                        }
-                    });
-                }
+            // Add event handlers for the client entries on contact panel.
+            for (var contact : contactPanel.getChildren()) {
+        
+                var contactButton = (Button) contact;
+                contactButton.setOnAction((event) -> {
+
+                    if (activeChat.equals(contactButton.getText())) {
+                        return;
+                    }
+                    initializeChatView();
+                    
+                });
             }
         });
 

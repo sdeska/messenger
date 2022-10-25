@@ -14,7 +14,7 @@ import fi.sdeska.messenger.utility.UtilityFunctions;
  */
 public class ConnectionThread extends Thread {
 
-    private static UtilityFunctions util = null;
+    private static UtilityFunctions util = new UtilityFunctions();
 
     private MessengerServer server = null;
 
@@ -28,7 +28,6 @@ public class ConnectionThread extends Thread {
      */
     ConnectionThread(SSLSocket socket, MessengerServer server) {
         this.server = server;
-        util = new UtilityFunctions();
         this.socket = socket;
         try {
             in = new DataInputStream(socket.getInputStream());
@@ -89,7 +88,7 @@ public class ConnectionThread extends Thread {
     public void informOfClientlistChange(String name, boolean op) {
         
         String message = null;
-        if (op == true) {
+        if (op) {
             message = "Client-Addition:" + name;
         }
         else {
