@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -39,6 +41,7 @@ public class MessengerClient {
     private ListeningThread listen = null;
 
     private ArrayList<String> connectedClients = null;
+    private HashMap<String, ArrayList<String>> messages = null;
 
     /**
      * The constructor only initializes everything which can be created before trying for a connection to the server.
@@ -47,6 +50,7 @@ public class MessengerClient {
     MessengerClient() {
 
         connectedClients = new ArrayList<>();
+        messages = new HashMap<>();
         System.setProperty("javax.net.ssl.trustStore", TRUSTSTORE);
         System.setProperty("javax.net.ssl.trustStorePassword", PASSWORD);
 
@@ -141,6 +145,19 @@ public class MessengerClient {
 
         message = "Message:" + message;
         util.sendData(message, out);
+
+    }
+
+    /**
+     * Adds a new message to a conversation with a specific client.
+     * @param sender the name of the client who the message was sent by.
+     * @param message the received message.
+     */
+    public void addMessage(String sender, String message) {
+
+        messages.putIfAbsent(sender, new ArrayList<>());
+        messages.get(sender).add(message);
+        System.out.println("Logged new message from " + sender + ": " + message);
 
     }
 
@@ -255,7 +272,7 @@ public class MessengerClient {
      * Gets an arraylist containing the usernames of all the clients connected to the same server according to the latest info by the server.
      * @return the arraylist of clients.
      */
-    public ArrayList<String> getConnectedClients() {
+    public List<String> getConnectedClients() {
         return this.connectedClients;
     }
 
