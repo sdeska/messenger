@@ -109,7 +109,7 @@ public class ConnectionThread extends Thread {
         else if (request.contains("Message")) {
             var parts = request.split(":");
             var recipientClient = server.getConnections().get(parts[1]);
-            var message = parts[0] + this.getName() + ":" + parts[2];
+            var message = parts[0] + ":" + this.getName() + ":" + parts[2];
             util.sendData(message, recipientClient.getOut());
         }
 
