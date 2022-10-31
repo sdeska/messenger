@@ -56,9 +56,7 @@ public class ConnectionThread extends Thread {
         while(true) {
             try {
                 var request = util.readStringData(in);
-                if (request.contains("Request")) {
-                    processRequest(request);
-                }
+                processRequest(request);
             } catch (IOException e) {
                 System.out.println("Connection to client \"" + this.getName() + "\" lost.");
                 try {
@@ -104,9 +102,15 @@ public class ConnectionThread extends Thread {
      */
     public void processRequest(String request) {
         
-        if (request.contains("Clients")) {
+        if (request.contains("Request: Clients")) {
             var users = createListOfClients();
             util.sendData(users, out);
+        }
+        else if (request.contains("Message")) {
+            var parts = request.split(":");
+            var recipientClient = server.getConnections().get(parts[1]);
+            var message = parts[0] + this.getName() + ":" + parts[2];
+            util.sendData(message, recipientClient.getOut());
         }
 
     }
@@ -128,6 +132,14 @@ public class ConnectionThread extends Thread {
         users = users.substring(0, users.length() - 1); // Remove trailing comma.
         return users;
 
+    }
+
+    /**
+     * Gets the data output stream connected to the client associated with this ConnectionThread.
+     * @return the data output stream associated with the specific client.
+     */
+    public DataOutputStream getOut() {
+        return this.out;
     }
 
 }
