@@ -59,6 +59,11 @@ public class ListeningThread extends Thread {
                 var name = received.replace("Client-Removal:", "");
                 client.removeClient(name);
             }
+            else if (received.contains("Message")) {
+                var senderAndMessage = received.replace("Message:", "");
+                var parameters = senderAndMessage.split(":");
+                client.addMessage(parameters[0], parameters[1]);
+            }
         }
     }
 

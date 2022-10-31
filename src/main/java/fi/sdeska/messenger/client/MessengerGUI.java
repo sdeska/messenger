@@ -166,6 +166,7 @@ public class MessengerGUI extends Application {
                         return;
                     }
                     initializeChatView();
+                    activeChat = contactButton.getText();
                     
                 });
             }
