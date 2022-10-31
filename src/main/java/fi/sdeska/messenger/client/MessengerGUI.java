@@ -27,10 +27,10 @@ public class MessengerGUI extends Application {
     private MessengerClient client = null;
     private Stage stage = null;
 
-    private int minWindowHeight = 480;
-    private int minWindowWidth = 720;
-    private int minChatHeight = 440;
-    private int minContactHeight = 440;
+    private static final int MIN_WINDOW_HEIGHT = 480;
+    private static final int MIN_WINDOW_WIDTH = 720;
+    private static final int MIN_CHAT_HEIGHT = 440;
+    private static final int MIN_CONTACT_HEIGHT = 440;
 
     private String activeChat = "";
 
@@ -46,8 +46,8 @@ public class MessengerGUI extends Application {
         this.stage = stage;
         client = new MessengerClient(this);
         stage.setTitle("Messenger");
-        stage.setMinHeight(minWindowHeight);
-        stage.setMinWidth(minWindowWidth);
+        stage.setMinHeight(MIN_WINDOW_HEIGHT);
+        stage.setMinWidth(MIN_WINDOW_WIDTH);
 
         // Creating the container in which to have the whole setup window.
         var setupView = new VBox(5);
@@ -59,7 +59,7 @@ public class MessengerGUI extends Application {
         nameLabel.setId("nameLabel");
         var nameBox = new TextField();
         nameBox.setId("nameBox");
-        nameBox.setMaxWidth(minWindowWidth * 0.9);
+        nameBox.setMaxWidth(MIN_WINDOW_WIDTH * 0.9);
         var confirmButton = new Button("Connect");
         confirmButton.setId("confirmButton");
         setupView.getChildren().addAll(nameLabel, nameBox, confirmButton);
@@ -114,17 +114,17 @@ public class MessengerGUI extends Application {
         var contactPanel = new VBox();
         contactPanel.setAlignment(Pos.TOP_CENTER);
         contactPanel.setId("contactPanel");
-        contactPanel.setMinWidth(minWindowWidth * 0.3);
-        contactPanel.setMaxWidth(minWindowWidth * 0.3);
-        contactPanel.setMinHeight(minContactHeight);
+        contactPanel.setMinWidth(MIN_WINDOW_WIDTH * 0.3);
+        contactPanel.setMaxWidth(MIN_WINDOW_WIDTH * 0.3);
+        contactPanel.setMinHeight(MIN_CONTACT_HEIGHT);
         contactPanel.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         mainView.getChildren().add(contactPanel);
 
         // Creating the chat panel displaying any opened chat content.
         var chatPanel = new VBox();
         chatPanel.setId("chatPanel");
-        chatPanel.setMinWidth(minWindowWidth * 0.7);
-        chatPanel.setMinHeight(minChatHeight);
+        chatPanel.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
+        chatPanel.setMinHeight(MIN_CHAT_HEIGHT);
         chatPanel.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
         mainView.getChildren().add(chatPanel);
         HBox.setHgrow(chatPanel, Priority.ALWAYS);
@@ -151,8 +151,8 @@ public class MessengerGUI extends Application {
                 var contactItem = new Button(contact);
                 contactItem.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
                 contactItem.setStyle("-fx-border-color: #303030; -fx-border-width: 1px;");
-                contactItem.setMinWidth(minWindowWidth * 0.3);
-                contactItem.setMaxWidth(minWindowWidth * 0.3);
+                contactItem.setMinWidth(MIN_WINDOW_WIDTH * 0.3);
+                contactItem.setMaxWidth(MIN_WINDOW_WIDTH * 0.3);
                 contactPanel.getChildren().add(contactItem);
             }
 
@@ -160,7 +160,7 @@ public class MessengerGUI extends Application {
             for (var contact : contactPanel.getChildren()) {
         
                 var contactButton = (Button) contact;
-                contactButton.setOnAction((event) -> {
+                contactButton.setOnAction(event -> {
 
                     if (activeChat.equals(contactButton.getText())) {
                         return;
@@ -189,10 +189,10 @@ public class MessengerGUI extends Application {
         var textField = new TextField();
         textField.setId("textField");
         textField.setAlignment(Pos.BOTTOM_CENTER);
-        textField.setMinWidth(minWindowWidth * 0.7 - 50);
+        textField.setMinWidth(MIN_WINDOW_WIDTH * 0.7 - 50);
         var messageBar = new HBox();
         messageBar.setId("messageBar");
-        messageBar.setMinWidth(minWindowWidth * 0.7);
+        messageBar.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
         HBox.setHgrow(textField, Priority.ALWAYS);
         messageBar.getChildren().addAll(textField, sendButton);
 
@@ -200,6 +200,18 @@ public class MessengerGUI extends Application {
         var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
         chatPanel.getChildren().clear();
         chatPanel.getChildren().addAll(messageView, messageBar);
+
+        // Add an event handler for the send button.
+        sendButton.setOnAction(event -> {
+             
+            if (textField.getText().isEmpty()) {
+                return;
+            }
+            var message = activeChat + ":" + textField.getText();
+            client.sendMessage(message);
+            textField.clear();
+
+        });
 
     }
 

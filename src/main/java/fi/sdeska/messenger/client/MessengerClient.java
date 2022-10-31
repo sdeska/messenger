@@ -46,7 +46,7 @@ public class MessengerClient {
      */
     MessengerClient() {
 
-        connectedClients = new ArrayList<String>();
+        connectedClients = new ArrayList<>();
         System.setProperty("javax.net.ssl.trustStore", TRUSTSTORE);
         System.setProperty("javax.net.ssl.trustStorePassword", PASSWORD);
 
@@ -133,6 +133,18 @@ public class MessengerClient {
     }
 
     /**
+     * Sends a message destined for some other client to the server.
+     * @param message the message to be sent. Should start with "nameOfRecipient:", where nameOfRecipient is a variable for
+     * the name of the client who the message should be forwarded to by the server.
+     */
+    public void sendMessage(String message) {
+
+        message = "Message:" + message;
+        util.sendData(message, out);
+
+    }
+
+    /**
      * Adds to the list of clients which are connected to the same server. 
      * Immediately returns without doing anything if the parameter is an empty string.
      * @param userString a string containing the username(s) to add. Multiples are separated by commas.
@@ -188,12 +200,14 @@ public class MessengerClient {
      * @return true if IP successfully set, false otherwise.
      */
     public boolean setHostIP(String ip) {
+
         var validator = new InetAddressValidator();
         if (!validator.isValidInet4Address(ip) && !ip.equals("sdeskaserver.tplinkdns.com")) {
             return false;
         }
         this.host = ip;
         return true;
+
     }
 
     /**
