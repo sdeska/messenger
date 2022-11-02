@@ -27,6 +27,7 @@ public class ConnectionThread extends Thread {
      * @param socket the socket to be run on the new thread.
      */
     ConnectionThread(SSLSocket socket, MessengerServer server) {
+
         this.server = server;
         this.socket = socket;
         try {
@@ -46,6 +47,7 @@ public class ConnectionThread extends Thread {
         }
         // Sending other connected clients to the new client.
         util.sendData(createListOfClients(), out);
+        
     }
 
     /**
@@ -53,6 +55,7 @@ public class ConnectionThread extends Thread {
      */
     @Override
     public void run() {
+
         while(true) {
             try {
                 var request = util.readStringData(in);
@@ -76,6 +79,7 @@ public class ConnectionThread extends Thread {
                 break;
             }
         }
+
     }
 
     /**
