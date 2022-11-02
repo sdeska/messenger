@@ -38,6 +38,7 @@ public class ListeningThread extends Thread {
      */
     @Override
     public void run() {
+
         while (true) {
             // Close thread if variable 'running' is false.
             if (!running) {
@@ -65,6 +66,7 @@ public class ListeningThread extends Thread {
                 client.addMessage(parameters[0], parameters[1]);
             }
         }
+        
     }
 
     /**
