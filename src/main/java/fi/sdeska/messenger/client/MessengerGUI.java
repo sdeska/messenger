@@ -118,7 +118,7 @@ public class MessengerGUI extends Application {
         contactPanel.setMinWidth(MIN_WINDOW_WIDTH * 0.3);
         contactPanel.setMaxWidth(MIN_WINDOW_WIDTH * 0.3);
         contactPanel.setMinHeight(MIN_CONTACT_HEIGHT);
-        contactPanel.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
+        contactPanel.setBackground(new Background(new BackgroundFill(Color.web("#b5b5b5"), CornerRadii.EMPTY, Insets.EMPTY)));
         mainView.getChildren().add(contactPanel);
 
         // Creating the chat panel displaying any opened chat content.
@@ -150,6 +150,7 @@ public class MessengerGUI extends Application {
             contactPanel.getChildren().clear();
             for (var contact : client.getConnectedClients()) {
                 var contactItem = new Button(contact);
+                contactItem.setId(contact);
                 contactItem.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
                 contactItem.setStyle("-fx-border-color: #303030; -fx-border-width: 1px;");
                 contactItem.setMinWidth(MIN_WINDOW_WIDTH * 0.3);
@@ -167,8 +168,12 @@ public class MessengerGUI extends Application {
                         return;
                     }
                     initializeChatView();
+                    if (!activeChat.equals("")) {
+                        var lastActive = (Button) stage.getScene().getRoot().lookup("#" + activeChat);
+                        lastActive.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #b5b5b5");
+                    }
                     activeChat = contactButton.getText();
-                    contactButton.setStyle("-fx-background-color: #919191");
+                    contactButton.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #919191");
                     
                 });
             }
