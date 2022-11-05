@@ -1,6 +1,9 @@
 package fi.sdeska.messenger.client;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -17,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 /**
@@ -25,13 +27,14 @@ import javafx.stage.Stage;
  */
 public class MessengerGUI extends Application {
     
-    private MessengerClient client = null;
-    private Stage stage = null;
-
     private static final int MIN_WINDOW_HEIGHT = 480;
     private static final int MIN_WINDOW_WIDTH = 720;
     private static final int MIN_CHAT_HEIGHT = 440;
     private static final int MIN_CONTACT_HEIGHT = 440;
+
+    private MessengerClient client = null;
+    private Stage stage = null;
+    private VBox messageView = null;
 
     private String activeChat = "";
 
@@ -186,41 +189,71 @@ public class MessengerGUI extends Application {
      */
     public void initializeChatView() {
 
-        // Add the view that will contain the send and received messages.
-        var messageView = new VBox();
-        messageView.setId("messageView");
-        VBox.setVgrow(messageView, Priority.ALWAYS);
+        Platform.runLater(() -> {
 
-        // Add a textfield and a send button to the bottom of the chatview.
-        var sendButton = new Button("Send");
-        sendButton.setId("sendButton");
-        var textField = new TextField();
-        textField.setId("textField");
-        textField.setAlignment(Pos.BOTTOM_CENTER);
-        textField.setMinWidth(MIN_WINDOW_WIDTH * 0.7 - 50);
-        var messageBar = new HBox();
-        messageBar.setId("messageBar");
-        messageBar.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
-        HBox.setHgrow(textField, Priority.ALWAYS);
-        messageBar.getChildren().addAll(textField, sendButton);
+            // Add the view that will contain the send and received messages.
+            messageView = new VBox();
+            messageView.setId("messageView");
+            messageView.setAlignment(Pos.TOP_LEFT);
+            VBox.setVgrow(messageView, Priority.ALWAYS);
 
-        // Display the created elements in the chat panel.
-        var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
-        chatPanel.getChildren().clear();
-        chatPanel.getChildren().addAll(messageView, messageBar);
+            // Add a textfield and a send button to the bottom of the chatview.
+            var sendButton = new Button("Send");
+            sendButton.setId("sendButton");
+            var textField = new TextField();
+            textField.setId("textField");
+            textField.setAlignment(Pos.BOTTOM_CENTER);
+            textField.setMinWidth(MIN_WINDOW_WIDTH * 0.7 - 50);
+            var messageBar = new HBox();
+            messageBar.setId("messageBar");
+            messageBar.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
+            HBox.setHgrow(textField, Priority.ALWAYS);
+            messageBar.getChildren().addAll(textField, sendButton);
 
-        // Add an event handler for the send button.
-        sendButton.setOnAction(event -> {
-             
-            if (textField.getText().isEmpty()) {
-                return;
-            }
-            var message = activeChat + ":" + textField.getText();
-            client.sendMessage(message);
-            textField.clear();
+            // Display the created elements in the chat panel.
+            var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
+            chatPanel.getChildren().clear();
+            chatPanel.getChildren().addAll(messageView, messageBar);
+
+            // Add an event handler for the send button.
+            sendButton.setOnAction(event -> {
+                
+                if (textField.getText().isEmpty()) {
+                    return;
+                }
+                var message = activeChat + ":" + textField.getText();
+                client.sendMessage(message);
+                textField.clear();
+
+            });
+            
+        });
+
+    }
+
+    public void showMessage(String message) {
+        
+        Platform.runLater(() -> {
+
+            var messageNode = new Label(message);
+            messageView.getChildren().add(messageNode);
+            VBox.setMargin(messageNode, new Insets(2, 0, 2, 2));
+
+            messageNode.setMinHeight(20);
+            messageNode.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
+            messageNode.setStyle("-fx-background-color: #919191");
+            messageNode.setPadding(new Insets(0, 5, 0, 5));
 
         });
 
+    }
+
+    public void setActiveChat(String name) {
+        this.activeChat = name;
+    }
+
+    public String getActiveChat() {
+        return this.activeChat;
     }
 
     public static void main(String[] args) {

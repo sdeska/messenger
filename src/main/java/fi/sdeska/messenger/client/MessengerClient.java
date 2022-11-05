@@ -155,9 +155,14 @@ public class MessengerClient {
      */
     public void addMessage(String sender, String message) {
 
+        if (gui.getActiveChat().equals("")) {
+            gui.setActiveChat(sender);
+            gui.initializeChatView();
+        }
         messages.putIfAbsent(sender, new ArrayList<>());
         messages.get(sender).add(message);
         System.out.println("Logged new message from " + sender + ": " + message);
+        gui.showMessage(sender + ": " + message);
 
     }
 
