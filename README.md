@@ -7,12 +7,16 @@ Author: Esa Karjalainen
 This repository contains the client- and serverside implementations of a simple messenger app.
 
 Currently the implementation allows for multiple clients connecting to the server. The server also updates 
-other clients whenever a client connects or disconnects, allowing displaying the currently connected ones. 
+other clients whenever a client connects or disconnects, allowing clients to display the currently connected ones. 
 Error situations are handled accordingly and the user is informed.
-Messaging other clients is currently implemented in a very barebones way. The GUI is not yet updated
-with a received message, but the messages are saved under the name of the sender.
+Messaging other clients is currently implemented partially. The messages received from any given client are
+saved into a chat with said client. The messages are displayed on the GUI, and chats between different clients
+can be viewed as seen fit, without losing message history. 
 
-The purpose of the project is general programming practice in Java, but wanting to try some 
+Currently notifications about a received message have not been implemented, and the GUI automatically displays 
+the chat in which a new message was received in. This is very bad UX :(
+
+The purpose of the project is general programming practice in Java, but the will to try some 
 basic socket programming definitely influenced the decision to specifically make a messenger app.
 
 The application can be run using Maven.
