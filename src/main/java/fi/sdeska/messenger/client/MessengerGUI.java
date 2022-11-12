@@ -2,7 +2,9 @@ package fi.sdeska.messenger.client;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javafx.application.Application;
@@ -35,7 +37,7 @@ public class MessengerGUI extends Application {
     private MessengerClient client = null;
     private Stage stage = null;
     private VBox messageView = null;
-
+    private Map<String, VBox> messageViews = new HashMap<>();
     private String activeChat = "";
 
     /**
@@ -167,10 +169,15 @@ public class MessengerGUI extends Application {
                 var contactButton = (Button) contact;
                 contactButton.setOnAction(event -> {
 
-                    if (activeChat.equals(contactButton.getText())) {
+                    if (activeChat.equals(contactButton.getId())) {
                         return;
                     }
-                    initializeChatView();
+                    else if (messageViews.containsKey(contactButton.getId())) {
+                        changeShownMessageView(contactButton.getId());
+                    }
+                    else {
+                        initializeChatView(contactButton.getId());
+                    }
                     if (!activeChat.equals("")) {
                         var lastActive = (Button) stage.getScene().getRoot().lookup("#" + activeChat);
                         lastActive.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #b5b5b5");
@@ -185,9 +192,9 @@ public class MessengerGUI extends Application {
     }
 
     /**
-     * Initializes the contents of the chat panel.
+     * Initializes the contents of the chat panel. Should not be called if the specific client already has an associated messageView.
      */
-    public void initializeChatView() {
+    public void initializeChatView(String name) {
 
         Platform.runLater(() -> {
 
@@ -196,6 +203,7 @@ public class MessengerGUI extends Application {
             messageView.setId("messageView");
             messageView.setAlignment(Pos.TOP_LEFT);
             VBox.setVgrow(messageView, Priority.ALWAYS);
+            messageViews.put(name, messageView);
 
             // Add a textfield and a send button to the bottom of the chatview.
             var sendButton = new Button("Send");
@@ -232,6 +240,10 @@ public class MessengerGUI extends Application {
 
     }
 
+    /**
+     * Creates a new UI element containing a new message.
+     * @param message the string to display in the GUI.
+     */
     public void showMessage(String message) {
         
         Platform.runLater(() -> {
@@ -247,6 +259,25 @@ public class MessengerGUI extends Application {
 
         });
 
+    }
+
+    public void changeShownMessageView(String name) {
+
+        Platform.runLater(() -> {
+
+            activeChat = name;
+            var user = messageViews.get(name);
+            messageView = user;
+            var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
+            chatPanel.getChildren().remove(0);
+            chatPanel.getChildren().add(0, messageView);
+
+        });
+
+    }
+
+    public Map<String, VBox> getMessageViews() {
+        return messageViews;
     }
 
     public void setActiveChat(String name) {
