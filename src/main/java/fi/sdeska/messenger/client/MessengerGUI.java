@@ -222,6 +222,7 @@ public class MessengerGUI extends Application {
                     return;
                 }
                 var message = activeChat + ":" + textField.getText();
+                showMessage("Me: " + textField.getText());
                 client.sendMessage(message);
                 textField.clear();
 
