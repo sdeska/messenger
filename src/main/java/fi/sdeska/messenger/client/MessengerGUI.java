@@ -150,7 +150,7 @@ public class MessengerGUI extends Application {
     public void updateContactPane() {
 
         Platform.runLater(() -> {
-                
+            
             var contactPanel = (VBox) stage.getScene().getRoot().lookup("#contactPanel");
             contactPanel.getChildren().clear();
             for (var contact : client.getConnectedClients()) {
@@ -169,25 +169,37 @@ public class MessengerGUI extends Application {
                 var contactButton = (Button) contact;
                 contactButton.setOnAction(event -> {
 
-                    if (activeChat.equals(contactButton.getId())) {
-                        return;
-                    }
-                    else if (messageViews.containsKey(contactButton.getId())) {
-                        changeShownMessageView(contactButton.getId());
-                    }
-                    else {
-                        initializeChatView(contactButton.getId());
-                    }
-                    if (!activeChat.equals("")) {
-                        var lastActive = (Button) stage.getScene().getRoot().lookup("#" + activeChat);
-                        lastActive.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #b5b5b5");
-                    }
-                    activeChat = contactButton.getText();
-                    contactButton.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #919191");
+                    contactClicked(contactButton);
                     
                 });
             }
         });
+
+    }
+
+    /**
+     * The event handler for a contact button getting clicked.
+     * @param contact the contact whose associated button was clicked.
+     */
+    public void contactClicked(Button contact) {
+
+        if (activeChat.equals(contact.getId())) {
+            return;
+        }
+
+        else if (messageViews.containsKey(contact.getId())) {
+            changeShownMessageView(contact.getId());
+        }
+        else {
+            initializeChatView(contact.getId());
+        }
+
+        if (!activeChat.equals("")) {
+            var lastActive = (Button) stage.getScene().getRoot().lookup("#" + activeChat);
+            lastActive.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #b5b5b5");
+        }
+        activeChat = contact.getText();
+        contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #919191");
 
     }
 
