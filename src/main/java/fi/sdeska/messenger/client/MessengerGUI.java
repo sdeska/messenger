@@ -261,12 +261,19 @@ public class MessengerGUI extends Application {
 
     }
 
+    /**
+     * Updates the displayed messageView, which contains the messages sent to and received from a specific client.
+     * @param name the name of the client.
+     */
     public void changeShownMessageView(String name) {
 
         Platform.runLater(() -> {
 
-            activeChat = name;
             var user = messageViews.get(name);
+            if (user == null) {
+                return;
+            }
+            activeChat = name;
             messageView = user;
             var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
             chatPanel.getChildren().remove(0);
