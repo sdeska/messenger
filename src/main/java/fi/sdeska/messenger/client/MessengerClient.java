@@ -46,24 +46,15 @@ public class MessengerClient {
     /**
      * The constructor only initializes everything which can be created before trying for a connection to the server.
      * The actual connection establishment related operations are performed in connectToServer().
-     */
-    MessengerClient() {
-
-        connectedClients = new ArrayList<>();
-        messages = new HashMap<>();
-        System.setProperty("javax.net.ssl.trustStore", TRUSTSTORE);
-        System.setProperty("javax.net.ssl.trustStorePassword", PASSWORD);
-
-    }
-    
-    /**
-     * This constructor calls the other, parameterless constructor and saves the GUI received as a parameter.
      * @param gui the MessengerGUI to associate this MessengerClient instance with.
      */
     MessengerClient(MessengerGUI gui) {
 
-        this();
         this.gui = gui;
+        connectedClients = new ArrayList<>();
+        messages = new HashMap<>();
+        System.setProperty("javax.net.ssl.trustStore", TRUSTSTORE);
+        System.setProperty("javax.net.ssl.trustStorePassword", PASSWORD);
 
     }
 
