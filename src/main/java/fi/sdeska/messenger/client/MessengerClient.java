@@ -5,9 +5,9 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.net.ssl.SSLSocket;
@@ -40,8 +40,8 @@ public class MessengerClient {
     private DataOutputStream out = null;
     private ListeningThread listen = null;
 
-    private ArrayList<String> connectedClients = null;
-    private HashMap<String, ArrayList<String>> messages = null;
+    private LinkedList<String> connectedClients = null;
+    private HashMap<String, LinkedList<String>> messages = null;
 
     /**
      * The constructor only initializes everything which can be created before trying for a connection to the server.
@@ -51,7 +51,7 @@ public class MessengerClient {
     MessengerClient(MessengerGUI gui) {
 
         this.gui = gui;
-        connectedClients = new ArrayList<>();
+        connectedClients = new LinkedList<>();
         messages = new HashMap<>();
         System.setProperty("javax.net.ssl.trustStore", TRUSTSTORE);
         System.setProperty("javax.net.ssl.trustStorePassword", PASSWORD);
@@ -123,7 +123,7 @@ public class MessengerClient {
         }
         System.out.println("Debug: \"" + response + "\"");
         var users = util.splitString(response, ",");
-        connectedClients = new ArrayList<>(Arrays.asList(users));
+        connectedClients = new LinkedList<>(Arrays.asList(users));
 
     }
 
@@ -156,7 +156,7 @@ public class MessengerClient {
             gui.setActiveChat(sender);
             gui.initializeChatView(sender);
         }
-        messages.putIfAbsent(sender, new ArrayList<>());
+        messages.putIfAbsent(sender, new LinkedList<>());
         messages.get(sender).add(message);
         System.out.println("Logged new message from " + sender + ": " + message);
         gui.showMessage(sender + ": " + message);
