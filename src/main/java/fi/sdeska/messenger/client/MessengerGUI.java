@@ -36,7 +36,7 @@ public class MessengerGUI extends Application {
 
     private MessengerClient client = null;
     private Stage stage = null;
-    private VBox messageView = null;
+    private VBox activeMessageView = null;
     private Map<String, VBox> messageViews = new HashMap<>();
     private String activeChat = "";
 
@@ -187,11 +187,11 @@ public class MessengerGUI extends Application {
             return;
         }
 
-        else if (messageViews.containsKey(contact.getId())) {
+        if (messageViews.containsKey(contact.getId())) {
             changeShownMessageView(contact.getId());
         }
         else {
-            initializeChatView(contact.getId());
+            initializeChatView(contact.getId(), true);
         }
 
         if (!activeChat.equals("")) {
@@ -205,17 +205,24 @@ public class MessengerGUI extends Application {
 
     /**
      * Initializes the contents of the chat panel. Should not be called if the specific client already has an associated messageView.
+     * @param name the name of the client to create the message view for.
+     * @param show whether to show the created message view immdiately or not.
      */
-    public void initializeChatView(String name) {
+    public void initializeChatView(String name, boolean show) {
 
         Platform.runLater(() -> {
 
-            // Add the view that will contain the send and received messages.
-            messageView = new VBox();
+            // Create the view that will contain the sent and received messages.
+            var messageView = new VBox();
             messageView.setId("messageView");
             messageView.setAlignment(Pos.TOP_LEFT);
             VBox.setVgrow(messageView, Priority.ALWAYS);
             messageViews.put(name, messageView);
+
+            // Return here if the messageView doesn't need to be shown.
+            if (!show) {
+                return;
+            }
 
             // Add a textfield and a send button to the bottom of the chatview.
             var sendButton = new Button("Send");
@@ -242,7 +249,7 @@ public class MessengerGUI extends Application {
                     return;
                 }
                 var message = activeChat + ":" + textField.getText();
-                showMessage("Me: " + textField.getText());
+                createMessage(activeChat, "Me: " + textField.getText());
                 client.sendMessage(message);
                 textField.clear();
 
@@ -253,17 +260,32 @@ public class MessengerGUI extends Application {
     }
 
     /**
-     * Creates a new UI element containing a new message.
+     * Second parameter defaults to {@value true}.
+     * 
+     * @see MessengerGUI#initializeChatView(String, boolean)
+     */
+    public void initializeChatView(String name) {
+
+        initializeChatView(name, false);
+
+    }
+
+    /**
+     * Creates a new UI element containing the new message.
      * @param message the string to display in the GUI.
      */
-    public void showMessage(String message) {
+    public void createMessage(String sender, String message) {
         
         Platform.runLater(() -> {
 
+            // Get the messageView associated with the sender.
+            var view = messageViews.get(sender);
+
             var messageNode = new Label(message);
-            messageView.getChildren().add(messageNode);
+            view.getChildren().add(messageNode);
             VBox.setMargin(messageNode, new Insets(2, 0, 2, 2));
 
+            // Scaling and styling for the element containing the message.
             messageNode.setMinHeight(20);
             messageNode.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
             messageNode.setStyle("-fx-background-color: #919191");
@@ -286,10 +308,10 @@ public class MessengerGUI extends Application {
                 return;
             }
             activeChat = name;
-            messageView = user;
+            activeMessageView = user;
             var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
             chatPanel.getChildren().remove(0);
-            chatPanel.getChildren().add(0, messageView);
+            chatPanel.getChildren().add(0, activeMessageView);
 
         });
 

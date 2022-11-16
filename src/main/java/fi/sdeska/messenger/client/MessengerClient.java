@@ -153,13 +153,12 @@ public class MessengerClient {
             gui.changeShownMessageView(sender);
         }
         else {
-            gui.setActiveChat(sender);
             gui.initializeChatView(sender);
         }
         messages.putIfAbsent(sender, new LinkedList<>());
         messages.get(sender).add(message);
         System.out.println("Logged new message from " + sender + ": " + message);
-        gui.showMessage(sender + ": " + message);
+        gui.createMessage(sender, sender + ": " + message);
 
     }
 
