@@ -147,13 +147,13 @@ public class MessengerClient {
     public void addMessage(String sender, String message) {
 
         if (gui.getActiveChat().equals(sender)) {
-            // No need to do anything since the correct messageView is already displayed.
+            // No need to do anything since the correct messageview is already displayed.
         }
-        else if (!gui.getActiveChat().equals(sender) && gui.getMessageViews().containsKey(sender)) {
-            gui.changeShownMessageView(sender);
+        else if (gui.getActiveChat().equals("") || !gui.getMessageViews().containsKey(sender)) {
+            gui.initializeChatView(sender);
         }
         else {
-            gui.initializeChatView(sender);
+            gui.changeShownMessageView(sender);
         }
         messages.putIfAbsent(sender, new LinkedList<>());
         messages.get(sender).add(message);

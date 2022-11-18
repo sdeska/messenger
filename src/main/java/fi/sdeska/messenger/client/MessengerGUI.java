@@ -90,7 +90,7 @@ public class MessengerGUI extends Application {
         });
 
         // Adding an eventhandler for the connect-button.
-        confirmButton.setOnAction((action) -> {
+        confirmButton.setOnAction(action -> {
 
             if (!client.setName(nameBox.getText())) {
                 nameLabel.setText("Please enter a non-empty name.");
@@ -101,7 +101,6 @@ public class MessengerGUI extends Application {
                 return;
             }
             startMainView(stage);
-
             
         });
 
@@ -154,6 +153,7 @@ public class MessengerGUI extends Application {
             var contactPanel = (VBox) stage.getScene().getRoot().lookup("#contactPanel");
             contactPanel.getChildren().clear();
             for (var contact : client.getConnectedClients()) {
+
                 var contactItem = new Button(contact);
                 contactItem.setId(contact);
                 contactItem.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -161,17 +161,15 @@ public class MessengerGUI extends Application {
                 contactItem.setMinWidth(MIN_WINDOW_WIDTH * 0.3);
                 contactItem.setMaxWidth(MIN_WINDOW_WIDTH * 0.3);
                 contactPanel.getChildren().add(contactItem);
+
             }
 
             // Add event handlers for the client entries on contact panel.
             for (var contact : contactPanel.getChildren()) {
         
                 var contactButton = (Button) contact;
-                contactButton.setOnAction(event -> {
+                contactButton.setOnAction(event -> contactClicked(contactButton));
 
-                    contactClicked(contactButton);
-                    
-                });
             }
         });
 
@@ -310,8 +308,11 @@ public class MessengerGUI extends Application {
             activeChat = name;
             activeMessageView = user;
             var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
-            chatPanel.getChildren().remove(0);
-            chatPanel.getChildren().add(0, activeMessageView);
+            var innerContent = chatPanel.getChildren();
+            if (!innerContent.isEmpty()) {
+                innerContent.remove(0);
+            }
+            innerContent.add(0, activeMessageView);
 
         });
 
