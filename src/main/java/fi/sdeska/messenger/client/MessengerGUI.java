@@ -92,8 +92,13 @@ public class MessengerGUI extends Application {
         // Adding an eventhandler for the connect-button.
         confirmButton.setOnAction(action -> {
 
-            if (!client.setName(nameBox.getText())) {
+            var code = client.setName(nameBox.getText());
+            if (code == 1) {
                 nameLabel.setText("Please enter a non-empty name.");
+                return;
+            }
+            else if (code == 2) {
+                nameLabel.setText("Only letters, numbers, hyphens and spaces are allowed.");
                 return;
             }
             if (!client.connectToServer()) {
@@ -246,9 +251,8 @@ public class MessengerGUI extends Application {
                 if (textField.getText().isEmpty()) {
                     return;
                 }
-                var message = activeChat + ":" + textField.getText();
+                client.sendMessage(activeChat + ":" + textField.getText());
                 createMessage(activeChat, "Me: " + textField.getText());
-                client.sendMessage(message);
                 textField.clear();
 
             });
