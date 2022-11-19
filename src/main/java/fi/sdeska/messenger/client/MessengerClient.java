@@ -27,9 +27,9 @@ public class MessengerClient {
     private static final String[] ciphers = new String[]{"TLS_AES_128_GCM_SHA256"};
     private String host = "127.0.0.1";
     private static final int SERVERPORT = 29999;
-
     private static final String TRUSTSTORE = "truststore.jts";
     private static final String PASSWORD = "changeit";
+    private static final String allowedInput = "^[A-Za-z0-9\\h-]*$";
     
     private static UtilityFunctions util = new UtilityFunctions();
     private MessengerGUI gui = null;
@@ -200,15 +200,19 @@ public class MessengerClient {
      * Used for setting the client's username. The name set by this method is currently used for client identification,
      * meaning that duplicate usernames cannot be used.
      * @param name cannot be empty.
-     * @return true if name successfully set, false otherwise.
+     * @return 0 if name successfully set, 1 if empty, 2 if any forbidden characters were used.
      */
-    public boolean setName(String name) {
+    public int setName(String name) {
         
         if (name == null || name.isEmpty()) {
-            return false;
+            return 1;
         }
+        if (!name.matches(allowedInput)) {
+            return 2;
+        }
+
         this.name = name;
-        return true;
+        return 0;
 
     }
 
