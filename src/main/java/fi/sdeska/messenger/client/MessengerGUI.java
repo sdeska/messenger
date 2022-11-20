@@ -262,7 +262,7 @@ public class MessengerGUI extends Application {
     }
 
     /**
-     * Second parameter defaults to {@value true}.
+     * Second parameter defaults to {@value false}.
      * 
      * @see MessengerGUI#initializeChatView(String, boolean)
      */

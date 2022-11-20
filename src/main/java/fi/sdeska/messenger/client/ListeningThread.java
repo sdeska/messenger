@@ -63,7 +63,13 @@ public class ListeningThread extends Thread {
             else if (received.contains("Message")) {
                 var senderAndMessage = received.replace("Message:", "");
                 var parameters = senderAndMessage.split(":");
-                client.addMessage(parameters[0], parameters[1]);
+                var messageBuilder = new StringBuilder(parameters[1]);
+                if (parameters.length > 2) {
+                    for (var index = 2; index < parameters.length; index++) {
+                        messageBuilder.append(":" + parameters[index]);
+                    }
+                }
+                client.addMessage(parameters[0], messageBuilder.toString());
             }
         }
         

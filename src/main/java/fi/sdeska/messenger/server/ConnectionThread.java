@@ -111,9 +111,17 @@ public class ConnectionThread extends Thread {
             util.sendData(users, out);
         }
         else if (request.contains("Message")) {
-            var parts = request.split(":");
-            var recipientClient = server.getConnections().get(parts[1]);
-            var message = parts[0] + ":" + this.getName() + ":" + parts[2];
+            var senderAndMessage = request.replace("Message:", "");
+            var parts = senderAndMessage.split(":");
+            var messageBuilder = new StringBuilder(parts[1]);
+            // If the message to be sent contains colons, they are added back to the split message here.
+            if (parts.length > 2) {
+                for (var index = 2; index < parts.length; index++) {
+                    messageBuilder.append(":" + parts[index]);
+                }
+            }
+            var recipientClient = server.getConnections().get(parts[0]);
+            var message = "Message:" + this.getName() + ":" + messageBuilder.toString();
             util.sendData(message, recipientClient.getOut());
         }
 
