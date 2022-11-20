@@ -98,7 +98,7 @@ public class MessengerGUI extends Application {
                 return;
             }
             else if (code == 2) {
-                nameLabel.setText("Only letters, numbers, hyphens and spaces are allowed.");
+                nameLabel.setText("Only letters, numbers, hyphens, underscores and spaces are allowed.");
                 return;
             }
             if (!client.connectToServer()) {

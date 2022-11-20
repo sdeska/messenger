@@ -29,7 +29,7 @@ public class MessengerClient {
     private static final int SERVERPORT = 29999;
     private static final String TRUSTSTORE = "truststore.jts";
     private static final String PASSWORD = "changeit";
-    private static final String allowedInput = "^[A-Za-z0-9\\h-]*$";
+    private static final String ALLOWED_INPUT = "^[A-Za-z0-9\\h-_]*$";
     
     private static UtilityFunctions util = new UtilityFunctions();
     private MessengerGUI gui = null;
@@ -207,7 +207,7 @@ public class MessengerClient {
         if (name == null || name.isEmpty()) {
             return 1;
         }
-        if (!name.matches(allowedInput)) {
+        if (!name.matches(ALLOWED_INPUT)) {
             return 2;
         }
 
