@@ -149,7 +149,10 @@ public class MessengerClient {
         if (gui.getActiveChat().equals(sender)) {
             // No need to do anything since the correct messageview is already displayed.
         }
-        else if (gui.getActiveChat().equals("") || !gui.getMessageViews().containsKey(sender)) {
+        else if (gui.getActiveChat().equals("")) {
+            gui.initializeChatView(sender, true);
+        }
+        else if (!gui.getMessageViews().containsKey(sender)) {
             gui.initializeChatView(sender);
         }
         else {
