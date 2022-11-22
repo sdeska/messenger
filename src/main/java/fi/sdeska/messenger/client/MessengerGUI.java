@@ -1,11 +1,8 @@
 package fi.sdeska.messenger.client;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -208,7 +205,7 @@ public class MessengerGUI extends Application {
 
     /**
      * Initializes the contents of the chat panel. Should not be called if the specific client already has an associated messageView.
-     * @param name the name of the client to create the message view for.
+     * @param name the name of the client to create the messageview for.
      * @param show whether to show the created message view immdiately or not.
      */
     public void initializeChatView(String name, boolean show) {
@@ -262,9 +259,10 @@ public class MessengerGUI extends Application {
     }
 
     /**
-     * Second parameter defaults to {@value false}.
+     * Second parameter defaults to false.
      * 
      * @see MessengerGUI#initializeChatView(String, boolean)
+     * @param name the name of the client to create the messageview for.
      */
     public void initializeChatView(String name) {
 
@@ -274,6 +272,7 @@ public class MessengerGUI extends Application {
 
     /**
      * Creates a new UI element containing the new message.
+     * @param sender the name of the user who the message was received from.
      * @param message the string to display in the GUI.
      */
     public void createMessage(String sender, String message) {
@@ -298,8 +297,9 @@ public class MessengerGUI extends Application {
     }
 
     /**
-     * Updates the displayed messageView, which contains the messages sent to and received from a specific client.
-     * @param name the name of the client.
+     * Updates the displayed messageview, which contains and displays the messages sent to and received from
+     * a specific client.
+     * @param name the name of the client whose chat to switch to.
      */
     public void changeShownMessageView(String name) {
 
@@ -322,14 +322,27 @@ public class MessengerGUI extends Application {
 
     }
 
+    /**
+     * Gets all initialized messageviews. These messageviews either have entries for messages in them, or have 
+     * been initialized by the user clicking on a contact, but not sending any message.
+     * @return map containing usernames and the corresponding messageviews.
+     */
     public Map<String, VBox> getMessageViews() {
         return messageViews;
     }
 
+    /**
+     * Updates the information about the currently active chat.
+     * @param name name of the user whose chat is currently active.
+     */
     public void setActiveChat(String name) {
         this.activeChat = name;
     }
 
+    /**
+     * Gets the username associated with the currently active chat.
+     * @return name of the user whose chat is currently active.
+     */
     public String getActiveChat() {
         return this.activeChat;
     }

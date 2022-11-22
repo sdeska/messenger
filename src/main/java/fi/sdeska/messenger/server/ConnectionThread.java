@@ -10,7 +10,8 @@ import javax.net.ssl.SSLSocket;
 import fi.sdeska.messenger.utility.UtilityFunctions;
 
 /**
- * Handles the operations of a single client connection on the server. Should always be run on a separate thread.
+ * Handles the operations of a single client connection on the server. 
+ * Should always be run on a separate thread.
  */
 public class ConnectionThread extends Thread {
 
