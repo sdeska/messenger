@@ -8,7 +8,8 @@ import fi.sdeska.messenger.utility.UtilityFunctions;
 
 /**
  * Handles listening for and reacting to messages coming from the connected server.
- * This allows for exchanges of data which have been initiated by the server instead of the client.
+ * This allows for exchanges of data which have been initiated by the server instead 
+ * of the client without blocking client-side execution.
  */
 public class ListeningThread extends Thread {
     
@@ -21,7 +22,8 @@ public class ListeningThread extends Thread {
     private boolean running;
 
     /**
-     * The constructor simply saves the client for which this thread is listening for incoming communication and initializes any required variables.
+     * The constructor simply saves the client for which this thread is listening 
+     * for incoming communication and initializes any required variables.
      * @param client the client which uses this thread.
      */
     ListeningThread(MessengerClient client) {

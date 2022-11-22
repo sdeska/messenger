@@ -60,7 +60,8 @@ public class MessengerServer {
     }
 
     /**
-     * Listens for incoming connections in a loop. Blocks on socket.accept(). Creates a new ConnectionThread for each connection and runs them on their own threads.
+     * Listens for incoming connections in a loop. Blocks on socket.accept(). 
+     * Creates a new ConnectionThread for each connection and runs them on their own threads.
      */
     public void listenForConnections() {
 
