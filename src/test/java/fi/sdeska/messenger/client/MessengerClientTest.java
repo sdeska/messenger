@@ -5,24 +5,27 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MessengerClientTest {
+class MessengerClientTest {
 
     MessengerClient client = null;
+    MessengerGUI gui = null;
 
     @BeforeEach
-    public void setUp() {
-        client = new MessengerClient();
+    void setUp() {
+        gui = new MessengerGUI();
+        client = new MessengerClient(gui);
     }
 
     @Test
-    public void testSetName() {
-        assertFalse(client.setName(""));
-        assertFalse(client.setName(null));
-        assertTrue(client.setName("ValidName"));
+    void testSetName() {
+        assertEquals(1, client.setName(""));
+        assertEquals(1, client.setName(null));
+        assertEquals(2, client.setName(":"));
+        assertEquals(0, client.setName("Valid Name_-"));
     }
 
     @Test
-    public void testSetIP() {
+    void testSetIP() {
         assertFalse(client.setHostIP("10.0.0.256"));
         assertFalse(client.setHostIP("bogus.dns.com"));
         assertTrue(client.setHostIP("0.0.0.0"));
@@ -31,7 +34,7 @@ public class MessengerClientTest {
     
     // This test intentionally blocks for ~5000ms.
     @Test
-    public void testConnectToServer() {
+    void testConnectToServer() {
         client.setName("ValidName");
         client.setHostIP("1.2.3.4"); // This does not connect to anything.
         assertFalse(client.connectToServer());
