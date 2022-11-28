@@ -34,6 +34,7 @@ public class MessengerGUI extends Application {
     private MessengerClient client = null;
     private Stage stage = null;
     private VBox chatPanel = null;
+    private HBox messageBar = null;
     private VBox activeMessageView = null;
     private Map<String, VBox> messageViews = new HashMap<>();
     private String activeChat = "";
@@ -228,35 +229,12 @@ public class MessengerGUI extends Application {
             // Update the active chat, since here the created message view gets shown.
             activeChat = name;
 
-            // Add a textfield and a send button to the bottom of the chatview.
-            var sendButton = new Button("Send");
-            sendButton.setId("sendButton");
-            var textField = new TextField();
-            textField.setId("textField");
-            textField.setAlignment(Pos.BOTTOM_CENTER);
-            textField.setMinWidth(MIN_WINDOW_WIDTH * 0.7 - 50);
-            var messageBar = new HBox();
-            messageBar.setId("messageBar");
-            messageBar.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
-            HBox.setHgrow(textField, Priority.ALWAYS);
-            messageBar.getChildren().addAll(textField, sendButton);
+            initializeMessageBar();
 
             // Display the created elements in the chat panel.
             chatPanel.getChildren().clear();
             chatPanel.getChildren().addAll(messageView, messageBar);
 
-            // Add an event handler for the send button.
-            sendButton.setOnAction(event -> {
-                
-                if (textField.getText().isEmpty()) {
-                    return;
-                }
-                client.sendMessage(activeChat + ":" + textField.getText());
-                createMessage(activeChat, "Me: " + textField.getText());
-                textField.clear();
-
-            });
-            
         });
 
     }
@@ -270,6 +248,38 @@ public class MessengerGUI extends Application {
     public void initializeChatView(String name) {
 
         initializeChatView(name, false);
+
+    }
+
+    /**
+     * Initializes the message bar that contains a text field and a send button for sending messages.
+     */
+    public void initializeMessageBar() {
+
+        // Add a textfield and a send button to the bottom of the chatview.
+        var sendButton = new Button("Send");
+        sendButton.setId("sendButton");
+        var textField = new TextField();
+        textField.setId("textField");
+        textField.setAlignment(Pos.BOTTOM_CENTER);
+        textField.setMinWidth(MIN_WINDOW_WIDTH * 0.7 - 50);
+        messageBar = new HBox();
+        messageBar.setId("messageBar");
+        messageBar.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
+        HBox.setHgrow(textField, Priority.ALWAYS);
+        messageBar.getChildren().addAll(textField, sendButton);
+
+        // Add an event handler for the send button.
+        sendButton.setOnAction(event -> {
+                
+            if (textField.getText().isEmpty()) {
+                return;
+            }
+            client.sendMessage(activeChat + ":" + textField.getText());
+            createMessage(activeChat, "Me: " + textField.getText());
+            textField.clear();
+
+        });
 
     }
 
