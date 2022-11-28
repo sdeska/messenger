@@ -225,6 +225,9 @@ public class MessengerGUI extends Application {
                 return;
             }
 
+            // Update the active chat, since here the created message view gets shown.
+            activeChat = name;
+
             // Add a textfield and a send button to the bottom of the chatview.
             var sendButton = new Button("Send");
             sendButton.setId("sendButton");
