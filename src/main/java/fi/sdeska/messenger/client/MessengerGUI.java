@@ -33,6 +33,7 @@ public class MessengerGUI extends Application {
 
     private MessengerClient client = null;
     private Stage stage = null;
+    private VBox chatPanel = null;
     private VBox activeMessageView = null;
     private Map<String, VBox> messageViews = new HashMap<>();
     private String activeChat = "";
@@ -128,7 +129,7 @@ public class MessengerGUI extends Application {
         mainView.getChildren().add(contactPanel);
 
         // Creating the chat panel displaying any opened chat content.
-        var chatPanel = new VBox();
+        chatPanel = new VBox();
         chatPanel.setId("chatPanel");
         chatPanel.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
         chatPanel.setMinHeight(MIN_CHAT_HEIGHT);
@@ -238,7 +239,6 @@ public class MessengerGUI extends Application {
             messageBar.getChildren().addAll(textField, sendButton);
 
             // Display the created elements in the chat panel.
-            var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
             chatPanel.getChildren().clear();
             chatPanel.getChildren().addAll(messageView, messageBar);
 
@@ -311,7 +311,6 @@ public class MessengerGUI extends Application {
             }
             activeChat = name;
             activeMessageView = user;
-            var chatPanel = (VBox) stage.getScene().lookup("#chatPanel");
             var innerContent = chatPanel.getChildren();
             if (!innerContent.isEmpty()) {
                 innerContent.remove(0);
