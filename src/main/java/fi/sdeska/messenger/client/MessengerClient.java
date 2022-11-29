@@ -155,9 +155,6 @@ public class MessengerClient {
         else if (!gui.getMessageViews().containsKey(sender)) {
             gui.initializeChatView(sender);
         }
-        else {
-            gui.changeShownMessageView(sender);
-        }
         messages.putIfAbsent(sender, new LinkedList<>());
         messages.get(sender).add(message);
         System.out.println("Logged new message from " + sender + ": " + message);
