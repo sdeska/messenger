@@ -100,42 +100,6 @@ public class MessengerGUI extends Application {
     }
 
     /**
-     * Initializes and displays the main view of the application.
-     * @param stage the Stage container in which to create the main view.
-     */
-    public void startMainView(Stage stage) {
-
-        var mainView = new HBox();
-        mainView.setId("mainView");
-
-        // Creating the contact panel displaying the contacts in the UI.
-        var contactPanel = new VBox();
-        contactPanel.setAlignment(Pos.TOP_CENTER);
-        contactPanel.setId("contactPanel");
-        contactPanel.setMinWidth(MIN_WINDOW_WIDTH * 0.3);
-        contactPanel.setMaxWidth(MIN_WINDOW_WIDTH * 0.3);
-        contactPanel.setMinHeight(MIN_CONTACT_HEIGHT);
-        contactPanel.setBackground(new Background(new BackgroundFill(Color.web("#b5b5b5"), CornerRadii.EMPTY, Insets.EMPTY)));
-        mainView.getChildren().add(contactPanel);
-
-        // Creating the chat panel displaying any opened chat content.
-        chatPanel = new VBox();
-        chatPanel.setId("chatPanel");
-        chatPanel.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
-        chatPanel.setMinHeight(MIN_CHAT_HEIGHT);
-        chatPanel.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
-        mainView.getChildren().add(chatPanel);
-        HBox.setHgrow(chatPanel, Priority.ALWAYS);
-
-        // Use the dimensions of the setup scene for the new scene and set the new scene to the stage.
-        var oldScene = stage.getScene();
-        var scene = new Scene(mainView, oldScene.getWidth(), oldScene.getHeight());
-        stage.setScene(scene);
-        stage.show();
-
-    }
-
-    /**
      * Refreshes the contact panel that displays other clients connected to the server.
      * Uses Platform.runLater() so that the GUI is always modified from the JavaFX thread instead of the calling thread (most likely ListeningThread).
      */
@@ -165,32 +129,6 @@ public class MessengerGUI extends Application {
 
             }
         });
-
-    }
-
-    /**
-     * The event handler for a contact button getting clicked.
-     * @param contact the contact whose associated button was clicked.
-     */
-    public void contactClicked(Button contact) {
-
-        if (activeChat.equals(contact.getId())) {
-            return;
-        }
-
-        if (messageViews.containsKey(contact.getId())) {
-            changeShownMessageView(contact.getId());
-        }
-        else {
-            initializeChatView(contact.getId(), true);
-        }
-
-        if (!activeChat.equals("")) {
-            var lastActive = (Button) stage.getScene().getRoot().lookup("#" + activeChat);
-            lastActive.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #b5b5b5");
-        }
-        activeChat = contact.getText();
-        contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #919191");
 
     }
 
@@ -241,38 +179,6 @@ public class MessengerGUI extends Application {
     }
 
     /**
-     * Initializes the message bar that contains a text field and a send button for sending messages.
-     */
-    public void initializeMessageBar() {
-
-        // Add a textfield and a send button to the bottom of the chatview.
-        var sendButton = new Button("Send");
-        sendButton.setId("sendButton");
-        var textField = new TextField();
-        textField.setId("textField");
-        textField.setAlignment(Pos.BOTTOM_CENTER);
-        textField.setMinWidth(MIN_WINDOW_WIDTH * 0.7 - 50);
-        messageBar = new HBox();
-        messageBar.setId("messageBar");
-        messageBar.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
-        HBox.setHgrow(textField, Priority.ALWAYS);
-        messageBar.getChildren().addAll(textField, sendButton);
-
-        // Add an event handler for the send button.
-        sendButton.setOnAction(event -> {
-                
-            if (textField.getText().isEmpty()) {
-                return;
-            }
-            client.sendMessage(activeChat + ":" + textField.getText());
-            createMessage(activeChat, "Me: " + textField.getText());
-            textField.clear();
-
-        });
-
-    }
-
-    /**
      * Creates a new UI element containing the new message.
      * @param sender the name of the user who the message was received from.
      * @param message the string to display in the GUI.
@@ -293,31 +199,6 @@ public class MessengerGUI extends Application {
             messageNode.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
             messageNode.setStyle("-fx-background-color: #919191");
             messageNode.setPadding(new Insets(0, 5, 0, 5));
-
-        });
-
-    }
-
-    /**
-     * Updates the displayed messageview, which contains and displays the messages sent to and received from
-     * a specific client.
-     * @param name the name of the client whose chat to switch to.
-     */
-    public void changeShownMessageView(String name) {
-
-        Platform.runLater(() -> {
-
-            var user = messageViews.get(name);
-            if (user == null) {
-                return;
-            }
-            activeChat = name;
-            activeMessageView = user;
-            var innerContent = chatPanel.getChildren();
-            if (!innerContent.isEmpty()) {
-                innerContent.remove(0);
-            }
-            innerContent.add(0, activeMessageView);
 
         });
 
@@ -349,10 +230,103 @@ public class MessengerGUI extends Application {
     }
 
     /**
+     * Initializes and displays the main view of the application.
+     * @param stage the Stage container in which to create the main view.
+     */
+    void startMainView(Stage stage) {
+
+        var mainView = new HBox();
+        mainView.setId("mainView");
+
+        // Creating the contact panel displaying the contacts in the UI.
+        var contactPanel = new VBox();
+        contactPanel.setAlignment(Pos.TOP_CENTER);
+        contactPanel.setId("contactPanel");
+        contactPanel.setMinWidth(MIN_WINDOW_WIDTH * 0.3);
+        contactPanel.setMaxWidth(MIN_WINDOW_WIDTH * 0.3);
+        contactPanel.setMinHeight(MIN_CONTACT_HEIGHT);
+        contactPanel.setBackground(new Background(new BackgroundFill(Color.web("#b5b5b5"), CornerRadii.EMPTY, Insets.EMPTY)));
+        mainView.getChildren().add(contactPanel);
+
+        // Creating the chat panel displaying any opened chat content.
+        chatPanel = new VBox();
+        chatPanel.setId("chatPanel");
+        chatPanel.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
+        chatPanel.setMinHeight(MIN_CHAT_HEIGHT);
+        chatPanel.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
+        mainView.getChildren().add(chatPanel);
+        HBox.setHgrow(chatPanel, Priority.ALWAYS);
+
+        // Use the dimensions of the setup scene for the new scene and set the new scene to the stage.
+        var oldScene = stage.getScene();
+        var scene = new Scene(mainView, oldScene.getWidth(), oldScene.getHeight());
+        stage.setScene(scene);
+        stage.show();
+
+    }
+
+    /**
+     * Initializes the message bar that contains a text field and a send button for sending messages.
+     */
+    void initializeMessageBar() {
+
+        // Add a textfield and a send button to the bottom of the chatview.
+        var sendButton = new Button("Send");
+        sendButton.setId("sendButton");
+        var textField = new TextField();
+        textField.setId("textField");
+        textField.setAlignment(Pos.BOTTOM_CENTER);
+        textField.setMinWidth(MIN_WINDOW_WIDTH * 0.7 - 50);
+        messageBar = new HBox();
+        messageBar.setId("messageBar");
+        messageBar.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
+        HBox.setHgrow(textField, Priority.ALWAYS);
+        messageBar.getChildren().addAll(textField, sendButton);
+
+        // Add an event handler for the send button.
+        sendButton.setOnAction(event -> {
+                
+            if (textField.getText().isEmpty()) {
+                return;
+            }
+            client.sendMessage(activeChat + ":" + textField.getText());
+            createMessage(activeChat, "Me: " + textField.getText());
+            textField.clear();
+
+        });
+
+    }
+
+    /**
+     * Updates the displayed messageview, which contains and displays the messages sent to and received from
+     * a specific client.
+     * @param name the name of the client whose chat to switch to.
+     */
+    void changeShownMessageView(String name) {
+
+        Platform.runLater(() -> {
+
+            var user = messageViews.get(name);
+            if (user == null) {
+                return;
+            }
+            activeChat = name;
+            activeMessageView = user;
+            var innerContent = chatPanel.getChildren();
+            if (!innerContent.isEmpty()) {
+                innerContent.remove(0);
+            }
+            innerContent.add(0, activeMessageView);
+
+        });
+
+    }
+
+    /**
      * The event handler associated with the confirm button in the setup view.
      * @param event the button press.
      */
-    private void confirmEventHandler(ActionEvent event) {
+    void confirmEventHandler(ActionEvent event) {
 
         var code = client.setName(nameBox.getText());
         if (code == 1) {
@@ -368,6 +342,32 @@ public class MessengerGUI extends Application {
             return;
         }
         startMainView(stage);
+
+    }
+
+    /**
+     * The event handler for a contact button getting clicked.
+     * @param contact the contact whose associated button was clicked.
+     */
+    void contactClicked(Button contact) {
+
+        if (activeChat.equals(contact.getId())) {
+            return;
+        }
+
+        if (messageViews.containsKey(contact.getId())) {
+            changeShownMessageView(contact.getId());
+        }
+        else {
+            initializeChatView(contact.getId(), true);
+        }
+
+        if (!activeChat.equals("")) {
+            var lastActive = (Button) stage.getScene().getRoot().lookup("#" + activeChat);
+            lastActive.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #b5b5b5");
+        }
+        activeChat = contact.getText();
+        contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #919191");
 
     }
 
