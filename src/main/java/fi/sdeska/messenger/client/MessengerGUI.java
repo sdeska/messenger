@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -33,6 +34,11 @@ public class MessengerGUI extends Application {
 
     private MessengerClient client = null;
     private Stage stage = null;
+
+    // The label which displays current status in the setup view.
+    private Label nameLabel = null;
+    private TextField nameBox = null;
+
     private VBox chatPanel = null;
     private HBox messageBar = null;
     private VBox activeMessageView = null;
@@ -60,9 +66,9 @@ public class MessengerGUI extends Application {
         setupView.setAlignment(Pos.CENTER);
 
         // Creating and adding UI elements.
-        var nameLabel = new Label("Please enter your nickname below.");
+        nameLabel = new Label("Please enter your nickname below.");
         nameLabel.setId("nameLabel");
-        var nameBox = new TextField();
+        nameBox = new TextField();
         nameBox.setId("nameBox");
         nameBox.setMaxWidth(MIN_WINDOW_WIDTH * 0.9);
         var confirmButton = new Button("Connect");
@@ -89,24 +95,7 @@ public class MessengerGUI extends Application {
         });
 
         // Adding an eventhandler for the connect-button.
-        confirmButton.setOnAction(action -> {
-
-            var code = client.setName(nameBox.getText());
-            if (code == 1) {
-                nameLabel.setText("Please enter a non-empty name.");
-                return;
-            }
-            else if (code == 2) {
-                nameLabel.setText("Only letters, numbers, hyphens, underscores and spaces are allowed.");
-                return;
-            }
-            if (!client.connectToServer()) {
-                nameLabel.setText("Connecting to server failed. Please contact the server administrator.");
-                return;
-            }
-            startMainView(stage);
-            
-        });
+        confirmButton.setOnAction(this::confirmEventHandler);
 
     }
 
@@ -357,6 +346,29 @@ public class MessengerGUI extends Application {
      */
     public String getActiveChat() {
         return this.activeChat;
+    }
+
+    /**
+     * The event handler associated with the confirm button in the setup view.
+     * @param event the button press.
+     */
+    private void confirmEventHandler(ActionEvent event) {
+
+        var code = client.setName(nameBox.getText());
+        if (code == 1) {
+            nameLabel.setText("Please enter a non-empty name.");
+            return;
+        }
+        else if (code == 2) {
+            nameLabel.setText("Only letters, numbers, hyphens, underscores and spaces are allowed.");
+            return;
+        }
+        if (!client.connectToServer()) {
+            nameLabel.setText("Connecting to server failed. Please contact the server administrator.");
+            return;
+        }
+        startMainView(stage);
+
     }
 
     public static void main(String[] args) {
