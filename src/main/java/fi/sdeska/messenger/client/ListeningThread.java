@@ -1,7 +1,6 @@
 package fi.sdeska.messenger.client;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import fi.sdeska.messenger.utility.UtilityFunctions;
@@ -17,7 +16,6 @@ public class ListeningThread extends Thread {
 
     private MessengerClient client = null;
     private DataInputStream in = null;
-    private DataOutputStream out = null;
 
     private boolean running;
 
@@ -31,7 +29,6 @@ public class ListeningThread extends Thread {
         running = true;
         this.client = client;
         in = client.getIn();
-        out = client.getOut();
     
     }
 
@@ -80,7 +77,7 @@ public class ListeningThread extends Thread {
     /**
      * Ends the thread by setting running to false.
      */
-    public void endListeningThread() {
+    void endListeningThread() {
         running = false;
     }
 

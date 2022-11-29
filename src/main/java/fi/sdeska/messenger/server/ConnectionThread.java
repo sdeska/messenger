@@ -84,11 +84,19 @@ public class ConnectionThread extends Thread {
     }
 
     /**
+     * Gets the data output stream connected to the client associated with this ConnectionThread.
+     * @return the data output stream associated with the specific client.
+     */
+    public DataOutputStream getOut() {
+        return this.out;
+    }
+
+    /**
      * Sends information about a change in the client list to the client.
      * @param name the name of the added/removed client.
      * @param op true if the client was added, false if removed.
      */
-    public void informOfClientlistChange(String name, boolean op) {
+    void informOfClientlistChange(String name, boolean op) {
         
         String message = null;
         if (op) {
@@ -105,7 +113,7 @@ public class ConnectionThread extends Thread {
      * Processes a request sent by the connected client.
      * @param request the string containing the received request.
      */
-    public void processRequest(String request) {
+    void processRequest(String request) {
         
         if (request.contains("Request: Clients")) {
             var users = createListOfClients();
@@ -132,7 +140,7 @@ public class ConnectionThread extends Thread {
      * Creates a list of names for the connected clients. Does not include the name of the client connected to this thread.
      * @return Usernames of the clients connected to the server concatenated to a string.
      */
-    public String createListOfClients() {
+    String createListOfClients() {
 
         var users = "";
         var connections = server.getConnections();
@@ -145,14 +153,6 @@ public class ConnectionThread extends Thread {
         users = users.substring(0, users.length() - 1); // Remove trailing comma.
         return users;
 
-    }
-
-    /**
-     * Gets the data output stream connected to the client associated with this ConnectionThread.
-     * @return the data output stream associated with the specific client.
-     */
-    public DataOutputStream getOut() {
-        return this.out;
     }
 
 }

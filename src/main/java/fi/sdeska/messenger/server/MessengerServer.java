@@ -35,11 +35,19 @@ public class MessengerServer {
         connections = new TreeMap<>();
 
     }
+    
+    /**
+     * Gets a map of all the active connections.
+     * @return map with usernames as keys and respective threads as the values.
+     */
+    public Map<String, ConnectionThread> getConnections() {
+        return connections;
+    }
 
     /**
      * Starts the server by creating the listening socket and calling listenForConnections().
      */
-    public void startServer() {
+    void startServer() {
 
         System.setProperty("javax.net.ssl.keyStore", KEYSTORE);
         System.setProperty("javax.net.ssl.keyStorePassword", PASSWORD);
@@ -63,7 +71,7 @@ public class MessengerServer {
      * Listens for incoming connections in a loop. Blocks on socket.accept(). 
      * Creates a new ConnectionThread for each connection and runs them on their own threads.
      */
-    public void listenForConnections() {
+    void listenForConnections() {
 
         System.out.println("Waiting for connections...");
         while (true) {
@@ -85,14 +93,6 @@ public class MessengerServer {
             System.out.println("Client \"" + thread.getName() + "\" connected.");
         }
 
-    }
-
-    /**
-     * Gets a map of all the active connections.
-     * @return map with usernames as keys and respective threads as the values.
-     */
-    public Map<String, ConnectionThread> getConnections() {
-        return connections;
     }
 
     public static void main(String[] args) {
