@@ -43,7 +43,6 @@ public class MessengerGUI extends Application {
     private VBox contactPanel = null;
     private VBox chatPanel = null;
     private HBox messageBar = null;
-    private VBox activeMessageView = null;
     private Map<String, VBox> messageViews = new HashMap<>();
     private String activeChat = "";
 
@@ -317,12 +316,11 @@ public class MessengerGUI extends Application {
                 return;
             }
             activeChat = name;
-            activeMessageView = user;
             var innerContent = chatPanel.getChildren();
             if (!innerContent.isEmpty()) {
                 innerContent.remove(0);
             }
-            innerContent.add(0, activeMessageView);
+            innerContent.add(0, user);
 
         });
 
