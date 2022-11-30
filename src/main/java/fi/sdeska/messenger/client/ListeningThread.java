@@ -34,6 +34,7 @@ public class ListeningThread extends Thread {
 
     /**
      * Overridden run() method of Thread class. Allocates an instance of ListeningThread and runs it on its own thread.
+     * Contains the control structure for processing received messages.
      */
     @Override
     public void run() {
@@ -47,7 +48,7 @@ public class ListeningThread extends Thread {
             try {
                 received = util.readStringData(in);
             } catch (IOException e) {
-                System.out.println("Closing listening thread.");
+                System.out.println("Connection lost. Closing listening thread.");
                 // Close thread by breaking out of the run() loop.
                 break;
             }
@@ -61,17 +62,27 @@ public class ListeningThread extends Thread {
             }
             else if (received.contains("Message")) {
                 var senderAndMessage = received.replace("Message:", "");
-                var parameters = senderAndMessage.split(":");
-                var messageBuilder = new StringBuilder(parameters[1]);
-                if (parameters.length > 2) {
-                    for (var index = 2; index < parameters.length; index++) {
-                        messageBuilder.append(":" + parameters[index]);
-                    }
-                }
-                client.addMessage(parameters[0], messageBuilder.toString());
+                receivedMessage(senderAndMessage);
             }
         }
         
+    }
+
+    /**
+     * Processes a received message.
+     * @param received the string containing the name of the sender and the actual message.
+     */
+    void receivedMessage(String received) {
+
+        var parameters = received.split(":");
+        var messageBuilder = new StringBuilder(parameters[1]);
+        if (parameters.length > 2) {
+            for (var index = 2; index < parameters.length; index++) {
+                messageBuilder.append(":" + parameters[index]);
+            }
+        }
+        client.addMessage(parameters[0], messageBuilder.toString());
+
     }
 
     /**
