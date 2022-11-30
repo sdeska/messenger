@@ -35,10 +35,12 @@ public class MessengerGUI extends Application {
     private MessengerClient client = null;
     private Stage stage = null;
 
-    // The label which displays current status in the setup view.
+    // Setup view elements.
     private Label nameLabel = null;
     private TextField nameBox = null;
 
+    // Main view elements.
+    private VBox contactPanel = null;
     private VBox chatPanel = null;
     private HBox messageBar = null;
     private VBox activeMessageView = null;
@@ -107,26 +109,11 @@ public class MessengerGUI extends Application {
 
         Platform.runLater(() -> {
             
-            var contactPanel = (VBox) stage.getScene().getRoot().lookup("#contactPanel");
             contactPanel.getChildren().clear();
             for (var contact : client.getConnectedClients()) {
 
-                var contactItem = new Button(contact);
-                contactItem.setId(contact);
-                contactItem.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
-                contactItem.setStyle("-fx-border-color: #303030; -fx-border-width: 1px;");
-                contactItem.setMinWidth(MIN_WINDOW_WIDTH * 0.3);
-                contactItem.setMaxWidth(MIN_WINDOW_WIDTH * 0.3);
-                contactPanel.getChildren().add(contactItem);
-
-            }
-
-            // Add event handlers for the client entries on contact panel.
-            for (var contact : contactPanel.getChildren()) {
-        
-                var contactButton = (Button) contact;
-                contactButton.setOnAction(event -> contactClicked(contactButton));
-
+                initializeContactButton(contact);
+            
             }
         });
 
@@ -239,7 +226,7 @@ public class MessengerGUI extends Application {
         mainView.setId("mainView");
 
         // Creating the contact panel displaying the contacts in the UI.
-        var contactPanel = new VBox();
+        contactPanel = new VBox();
         contactPanel.setAlignment(Pos.TOP_CENTER);
         contactPanel.setId("contactPanel");
         contactPanel.setMinWidth(MIN_WINDOW_WIDTH * 0.3);
@@ -294,6 +281,25 @@ public class MessengerGUI extends Application {
             textField.clear();
 
         });
+
+    }
+
+    /**
+     * Initializes a new contact entry into the contact panel.
+     * @param contact the name of the contact for who to create an entry for.
+     */
+    void initializeContactButton(String contact) {
+
+        var contactItem = new Button(contact);
+        contactItem.setId(contact);
+        contactItem.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
+        contactItem.setStyle("-fx-border-color: #303030; -fx-border-width: 1px;");
+        contactItem.setMinWidth(MIN_WINDOW_WIDTH * 0.3);
+        contactItem.setMaxWidth(MIN_WINDOW_WIDTH * 0.3);
+        contactPanel.getChildren().add(contactItem);
+
+        // Add an event handler to the button.
+        contactItem.setOnAction(event -> contactClicked(contactItem));
 
     }
 
