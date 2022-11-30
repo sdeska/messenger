@@ -49,8 +49,7 @@ public class ListeningThread extends Thread {
                 received = util.readStringData(in);
             } catch (IOException e) {
                 System.out.println("Connection lost. Closing listening thread.");
-                // Close thread by breaking out of the run() loop.
-                break;
+                running = false;
             }
             if (received.contains("Client-Addition")) {
                 var name = received.replace("Client-Addition:", "");
