@@ -142,16 +142,16 @@ public class ConnectionThread extends Thread {
      */
     String createListOfClients() {
 
-        var users = "";
         var connections = server.getConnections();
         if (connections.size() == 0) {
-            return users;
+            return "";
         }
+        var users = new StringBuilder();
         for (Map.Entry<String, ConnectionThread> entry : connections.entrySet()) {
-            users += entry.getKey() + ",";
+            users.append(entry.getKey() + ",");
         }
-        users = users.substring(0, users.length() - 1); // Remove trailing comma.
-        return users;
+        users.deleteCharAt(users.length() - 1); // Remove trailing comma.
+        return users.toString();
 
     }
 
