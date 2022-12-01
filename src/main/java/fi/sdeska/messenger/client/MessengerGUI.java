@@ -272,7 +272,7 @@ public class MessengerGUI extends Application {
         // Add an event handler for the send button.
         sendButton.setOnAction(event -> {
                 
-            if (textField.getText().isEmpty()) {
+            if (textField.getText().isEmpty() || !client.getConnectedClients().contains(activeChat)) {
                 return;
             }
             client.sendMessage(activeChat + ":" + textField.getText());
