@@ -21,7 +21,7 @@ public class UtilityFunctions {
         var splitInput = input.split(separator);
         String[] output = new String[splitInput.length];
         for (int i = 0; i < splitInput.length; i++) {
-            output[i] = splitInput[i].replaceAll("^\\s+|\\s+$", "");
+            output[i] = splitInput[i].replaceAll("^\\s+$|^\\s+$", "");
         }
         return output;
 
