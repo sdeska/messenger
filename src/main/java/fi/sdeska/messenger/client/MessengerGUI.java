@@ -114,6 +114,8 @@ public class MessengerGUI extends Application {
                 initializeContactButton(contact);
             
             }
+            updateContactEntries();
+
         });
 
     }
@@ -143,6 +145,8 @@ public class MessengerGUI extends Application {
             activeChat = name;
 
             initializeMessageBar();
+
+            updateContactEntries();
 
             // Display the created elements in the chat panel.
             chatPanel.getChildren().clear();
@@ -271,7 +275,7 @@ public class MessengerGUI extends Application {
 
         // Add an event handler for the send button.
         sendButton.setOnAction(event -> {
-                
+            
             if (textField.getText().isEmpty() || !client.getConnectedClients().contains(activeChat)) {
                 return;
             }
@@ -321,6 +325,7 @@ public class MessengerGUI extends Application {
                 innerContent.remove(0);
             }
             innerContent.add(0, user);
+            updateContactEntries();
 
         });
 
@@ -366,12 +371,22 @@ public class MessengerGUI extends Application {
             initializeChatView(contact.getId(), true);
         }
 
-        if (!activeChat.equals("")) {
-            var lastActive = (Button) stage.getScene().getRoot().lookup("#" + activeChat);
-            lastActive.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #b5b5b5");
+        updateContactEntries();
+
+    }
+
+    void updateContactEntries() {
+
+        var contacts = contactPanel.getChildren();
+        for (var contact : contacts) {
+
+            if (contact.getId().equals(activeChat)) {
+                contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #919191");
+                continue;
+            }
+            contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #b5b5b5");
+        
         }
-        activeChat = contact.getText();
-        contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #919191");
 
     }
 
