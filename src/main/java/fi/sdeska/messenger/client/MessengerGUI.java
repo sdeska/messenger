@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -125,7 +126,7 @@ public class MessengerGUI extends Application {
      * @param name the name of the client to create the messageview for.
      * @param show whether to show the created message view immdiately or not.
      */
-    public void initializeChatView(String name, boolean show) {
+    public void initializeMessageView(String name, boolean show) {
 
         Platform.runLater(() -> {
 
@@ -159,12 +160,12 @@ public class MessengerGUI extends Application {
     /**
      * Second parameter defaults to false.
      * 
-     * @see MessengerGUI#initializeChatView(String, boolean)
+     * @see MessengerGUI#initializeMessageView(String, boolean)
      * @param name the name of the client to create the messageview for.
      */
     public void initializeChatView(String name) {
 
-        initializeChatView(name, false);
+        initializeMessageView(name, false);
 
     }
 
@@ -368,13 +369,16 @@ public class MessengerGUI extends Application {
             changeShownMessageView(contact.getId());
         }
         else {
-            initializeChatView(contact.getId(), true);
+            initializeMessageView(contact.getId(), true);
         }
 
         updateContactEntries();
 
     }
 
+    /**
+     * Updates the colors on the contact list entries. Should be called every time that the selected chat is changed.
+     */
     void updateContactEntries() {
 
         var contacts = contactPanel.getChildren();
