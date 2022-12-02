@@ -9,7 +9,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,10 +16,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -42,9 +44,9 @@ public class MessengerGUI extends Application {
 
     // Main view elements.
     private VBox contactPanel = null;
-    private VBox chatPanel = null;
+    private GridPane chatPanel = null;
     private HBox messageBar = null;
-    private Map<String, VBox> messageViews = new HashMap<>();
+    private Map<String, GridPane> messageViews = new HashMap<>();
     private String activeChat = "";
 
     /**
@@ -131,11 +133,14 @@ public class MessengerGUI extends Application {
         Platform.runLater(() -> {
 
             // Create the view that will contain the sent and received messages.
-            var messageView = new VBox();
+            var messageView = new GridPane();
             messageView.setId("messageView");
             messageView.setAlignment(Pos.TOP_LEFT);
-            VBox.setVgrow(messageView, Priority.ALWAYS);
+            messageView.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
+            messageView.setMinHeight(MIN_CHAT_HEIGHT - 25); // Minus text bar height.
             messageViews.put(name, messageView);
+            GridPane.setHgrow(messageView, Priority.ALWAYS);
+            GridPane.setVgrow(messageView, Priority.ALWAYS);
 
             // Return here if the messageView doesn't need to be shown.
             if (!show) {
@@ -151,7 +156,8 @@ public class MessengerGUI extends Application {
 
             // Display the created elements in the chat panel.
             chatPanel.getChildren().clear();
-            chatPanel.getChildren().addAll(messageView, messageBar);
+            chatPanel.add(messageView, 0, 0);
+            chatPanel.add(messageBar, 0, 1);
 
         });
 
@@ -179,17 +185,21 @@ public class MessengerGUI extends Application {
         Platform.runLater(() -> {
 
             // Get the messageView associated with the sender.
-            var view = messageViews.get(sender);
+            var messageView = messageViews.get(sender);
 
-            var messageNode = new Label(message);
-            view.getChildren().add(messageNode);
-            VBox.setMargin(messageNode, new Insets(2, 0, 2, 2));
+            // Using Text inside a VBox since resizing using a Label does not work.
+            var text = new Text(message);
+            text.setFont(new Font(14));
+            var messageNode = new VBox(text);
+            messageView.add(messageNode, 0, messageView.getRowCount());
+            GridPane.setMargin(messageNode, new Insets(2, 0, 2, 2));
 
             // Scaling and styling for the element containing the message.
             messageNode.setMinHeight(20);
-            messageNode.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
+            messageNode.setMinWidth(MIN_WINDOW_WIDTH * 0.7 - 4); // Minus margin size on left and right.
             messageNode.setStyle("-fx-background-color: #919191");
             messageNode.setPadding(new Insets(0, 5, 0, 5));
+            GridPane.setHgrow(messageNode, Priority.ALWAYS);
 
         });
 
@@ -200,7 +210,7 @@ public class MessengerGUI extends Application {
      * been initialized by the user clicking on a contact, but not sending any message.
      * @return map containing usernames and the corresponding messageviews.
      */
-    public Map<String, VBox> getMessageViews() {
+    public Map<String, GridPane> getMessageViews() {
         return messageViews;
     }
 
@@ -240,7 +250,7 @@ public class MessengerGUI extends Application {
         mainView.getChildren().add(contactPanel);
 
         // Creating the chat panel displaying any opened chat content.
-        chatPanel = new VBox();
+        chatPanel = new GridPane();
         chatPanel.setId("chatPanel");
         chatPanel.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
         chatPanel.setMinHeight(MIN_CHAT_HEIGHT);
@@ -273,6 +283,7 @@ public class MessengerGUI extends Application {
         messageBar.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
         HBox.setHgrow(textField, Priority.ALWAYS);
         messageBar.getChildren().addAll(textField, sendButton);
+        GridPane.setHgrow(messageBar, Priority.ALWAYS);
 
         // Add an event handler for the send button.
         sendButton.setOnAction(event -> {
@@ -385,6 +396,7 @@ public class MessengerGUI extends Application {
         for (var contact : contacts) {
 
             if (contact.getId().equals(activeChat)) {
+                // Selected contact gets here.
                 contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #919191");
                 continue;
             }
