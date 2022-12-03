@@ -68,6 +68,7 @@ public class MessengerGUI extends Application {
         var setupView = new VBox(5);
         setupView.setId("setupView");
         setupView.setAlignment(Pos.CENTER);
+        setupView.setMinWidth(MIN_WINDOW_WIDTH);
 
         // Creating and adding UI elements.
         nameLabel = new Label("Please enter your nickname below.");
@@ -98,7 +99,7 @@ public class MessengerGUI extends Application {
 
         });
 
-        // Adding an eventhandler for the connect-button.
+        // Adding an event handler for the connect-button.
         confirmButton.setOnAction(this::confirmEventHandler);
 
     }
@@ -237,6 +238,7 @@ public class MessengerGUI extends Application {
     void startMainView(Stage stage) {
 
         var mainView = new HBox();
+        mainView.setMinWidth(MIN_WINDOW_WIDTH);
         mainView.setId("mainView");
 
         // Creating the contact panel displaying the contacts in the UI.
