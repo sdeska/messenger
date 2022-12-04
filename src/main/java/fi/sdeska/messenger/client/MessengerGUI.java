@@ -288,16 +288,10 @@ public class MessengerGUI extends Application {
         GridPane.setHgrow(messageBar, Priority.ALWAYS);
 
         // Add an event handler for the send button.
-        sendButton.setOnAction(event -> {
-            
-            if (textField.getText().isEmpty() || !client.getConnectedClients().contains(activeChat)) {
-                return;
-            }
-            client.sendMessage(activeChat + ":" + textField.getText());
-            createMessage(activeChat, "Me: " + textField.getText());
-            textField.clear();
-
-        });
+        sendButton.setOnAction(this::sendMessageHandler);
+        // Add an event handler for pressing enter when the textfield is selected.
+        // Just adding an event handler to a textfield defaults to the enter key being pressed.
+        textField.setOnAction(this::sendMessageHandler);
 
     }
 
@@ -365,6 +359,22 @@ public class MessengerGUI extends Application {
             return;
         }
         startMainView(stage);
+
+    }
+
+    /**
+     * The event handler for sending a message.
+     * @param event message send action.
+     */
+    void sendMessageHandler(ActionEvent event) {
+
+        var textField = (TextField) messageBar.getChildren().get(0);
+        if (textField.getText().isEmpty() || !client.getConnectedClients().contains(activeChat)) {
+            return;
+        }
+        client.sendMessage(activeChat + ":" + textField.getText());
+        createMessage(activeChat, "Me: " + textField.getText());
+        textField.clear();
 
     }
 
