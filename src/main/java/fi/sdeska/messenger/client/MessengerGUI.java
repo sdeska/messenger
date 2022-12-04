@@ -105,108 +105,6 @@ public class MessengerGUI extends Application {
     }
 
     /**
-     * Refreshes the contact panel that displays other clients connected to the server.
-     * Uses Platform.runLater() so that the GUI is always modified from the JavaFX thread instead of the calling thread (most likely ListeningThread).
-     */
-    public void updateContactPane() {
-
-        Platform.runLater(() -> {
-            
-            contactPanel.getChildren().clear();
-            for (var contact : client.getConnectedClients()) {
-
-                initializeContactButton(contact);
-            
-            }
-            updateContactEntries();
-
-        });
-
-    }
-
-    /**
-     * Initializes the contents of the chat panel. Should not be called if the specific client already has an associated messageView.
-     * @param name the name of the client to create the messageview for.
-     * @param show whether to show the created message view immdiately or not.
-     */
-    public void initializeMessageView(String name, boolean show) {
-
-        Platform.runLater(() -> {
-
-            // Create the view that will contain the sent and received messages.
-            var messageView = new GridPane();
-            messageView.setId("messageView");
-            messageView.setAlignment(Pos.TOP_LEFT);
-            messageView.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
-            messageView.setMinHeight(MIN_CHAT_HEIGHT - 25); // Minus text bar height.
-            messageViews.put(name, messageView);
-            GridPane.setHgrow(messageView, Priority.ALWAYS);
-            GridPane.setVgrow(messageView, Priority.ALWAYS);
-
-            // Return here if the messageView doesn't need to be shown.
-            if (!show) {
-                return;
-            }
-
-            // Update the active chat, since here the created message view gets shown.
-            activeChat = name;
-
-            initializeMessageBar();
-
-            updateContactEntries();
-
-            // Display the created elements in the chat panel.
-            chatPanel.getChildren().clear();
-            chatPanel.add(messageView, 0, 0);
-            chatPanel.add(messageBar, 0, 1);
-
-        });
-
-    }
-
-    /**
-     * Second parameter defaults to false.
-     * 
-     * @see MessengerGUI#initializeMessageView(String, boolean)
-     * @param name the name of the client to create the messageview for.
-     */
-    public void initializeChatView(String name) {
-
-        initializeMessageView(name, false);
-
-    }
-
-    /**
-     * Creates a new UI element containing the new message.
-     * @param sender the name of the user who the message was received from.
-     * @param message the string to display in the GUI.
-     */
-    public void createMessage(String sender, String message) {
-        
-        Platform.runLater(() -> {
-
-            // Get the messageView associated with the sender.
-            var messageView = messageViews.get(sender);
-
-            // Using Text inside a VBox since resizing using a Label does not work.
-            var text = new Text(message);
-            text.setFont(new Font(14));
-            var messageNode = new VBox(text);
-            messageView.add(messageNode, 0, messageView.getRowCount());
-            GridPane.setMargin(messageNode, new Insets(2, 0, 2, 2));
-
-            // Scaling and styling for the element containing the message.
-            messageNode.setMinHeight(20);
-            messageNode.setMinWidth(MIN_WINDOW_WIDTH * 0.7 - 4); // Minus margin size on left and right.
-            messageNode.setStyle("-fx-background-color: #919191");
-            messageNode.setPadding(new Insets(0, 5, 0, 5));
-            GridPane.setHgrow(messageNode, Priority.ALWAYS);
-
-        });
-
-    }
-
-    /**
      * Gets all initialized messageviews. These messageviews either have entries for messages in them, or have 
      * been initialized by the user clicking on a contact, but not sending any message.
      * @return map containing usernames and the corresponding messageviews.
@@ -269,6 +167,58 @@ public class MessengerGUI extends Application {
     }
 
     /**
+     * Initializes the contents of the chat panel. Should not be called if the specific client already has an associated messageView.
+     * @param name the name of the client to create the messageview for.
+     * @param show whether to show the created message view immdiately or not.
+     */
+    void initializeMessageView(String name, boolean show) {
+
+        Platform.runLater(() -> {
+
+            // Create the view that will contain the sent and received messages.
+            var messageView = new GridPane();
+            messageView.setId("messageView");
+            messageView.setAlignment(Pos.TOP_LEFT);
+            messageView.setMinWidth(MIN_WINDOW_WIDTH * 0.7);
+            messageView.setMinHeight(MIN_CHAT_HEIGHT - 25); // Minus text bar height.
+            messageViews.put(name, messageView);
+            GridPane.setHgrow(messageView, Priority.ALWAYS);
+            GridPane.setVgrow(messageView, Priority.ALWAYS);
+
+            // Return here if the messageView doesn't need to be shown.
+            if (!show) {
+                return;
+            }
+
+            // Update the active chat, since here the created message view gets shown.
+            activeChat = name;
+
+            initializeMessageBar();
+
+            updateContactEntries();
+
+            // Display the created elements in the chat panel.
+            chatPanel.getChildren().clear();
+            chatPanel.add(messageView, 0, 0);
+            chatPanel.add(messageBar, 0, 1);
+
+        });
+
+    }
+
+    /**
+     * Second parameter defaults to false.
+     * 
+     * @see MessengerGUI#initializeMessageView(String, boolean)
+     * @param name the name of the client to create the messageview for.
+     */
+    void initializeChatView(String name) {
+
+        initializeMessageView(name, false);
+
+    }
+
+    /**
      * Initializes the message bar that contains a text field and a send button for sending messages.
      */
     void initializeMessageBar() {
@@ -315,6 +265,75 @@ public class MessengerGUI extends Application {
     }
 
     /**
+     * Creates a new UI element containing the new message.
+     * @param sender the name of the user who the message was received from.
+     * @param message the string to display in the GUI.
+     */
+    void createMessage(String sender, String message) {
+        
+        Platform.runLater(() -> {
+
+            // Get the messageView associated with the sender.
+            var messageView = messageViews.get(sender);
+
+            // Using Text inside a VBox since resizing using a Label does not work.
+            var text = new Text(message);
+            text.setFont(new Font(14));
+            var messageNode = new VBox(text);
+            messageView.add(messageNode, 0, messageView.getRowCount());
+            GridPane.setMargin(messageNode, new Insets(2, 0, 2, 2));
+
+            // Scaling and styling for the element containing the message.
+            messageNode.setMinHeight(20);
+            messageNode.setMinWidth(MIN_WINDOW_WIDTH * 0.7 - 4); // Minus margin size on left and right.
+            messageNode.setStyle("-fx-background-color: #919191");
+            messageNode.setPadding(new Insets(0, 5, 0, 5));
+            GridPane.setHgrow(messageNode, Priority.ALWAYS);
+
+        });
+
+    }
+
+    /**
+     * Refreshes the contact panel that displays other clients connected to the server.
+     * Uses Platform.runLater() so that the GUI is always modified from the JavaFX thread instead of the calling thread (most likely ListeningThread).
+     */
+    void updateContactPane() {
+
+        Platform.runLater(() -> {
+            
+            contactPanel.getChildren().clear();
+            for (var contact : client.getConnectedClients()) {
+
+                initializeContactButton(contact);
+            
+            }
+            updateContactEntries();
+
+        });
+
+    }
+
+    /**
+     * Updates the colors on the contact list entries. Should be called every time that the selected chat is changed.
+     */
+    void updateContactEntries() {
+
+        var contacts = contactPanel.getChildren();
+        for (var contact : contacts) {
+
+            if (contact.getId().equals(activeChat)) {
+                // Selected contact gets here.
+                contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #919191");
+                continue;
+            }
+            contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #b5b5b5");
+        
+        }
+
+    }
+
+    /**
      * Updates the displayed messageview, which contains and displays the messages sent to and received from
      * a specific client.
      * @param name the name of the client whose chat to switch to.
@@ -336,6 +355,27 @@ public class MessengerGUI extends Application {
             updateContactEntries();
 
         });
+
+    }
+
+    /**
+     * The event handler for a contact button getting clicked.
+     * @param contact the contact whose associated button was clicked.
+     */
+    void contactClicked(Button contact) {
+
+        if (activeChat.equals(contact.getId())) {
+            return;
+        }
+
+        if (messageViews.containsKey(contact.getId())) {
+            changeShownMessageView(contact.getId());
+        }
+        else {
+            initializeMessageView(contact.getId(), true);
+        }
+
+        updateContactEntries();
 
     }
 
@@ -375,46 +415,6 @@ public class MessengerGUI extends Application {
         client.sendMessage(activeChat + ":" + textField.getText());
         createMessage(activeChat, "Me: " + textField.getText());
         textField.clear();
-
-    }
-
-    /**
-     * The event handler for a contact button getting clicked.
-     * @param contact the contact whose associated button was clicked.
-     */
-    void contactClicked(Button contact) {
-
-        if (activeChat.equals(contact.getId())) {
-            return;
-        }
-
-        if (messageViews.containsKey(contact.getId())) {
-            changeShownMessageView(contact.getId());
-        }
-        else {
-            initializeMessageView(contact.getId(), true);
-        }
-
-        updateContactEntries();
-
-    }
-
-    /**
-     * Updates the colors on the contact list entries. Should be called every time that the selected chat is changed.
-     */
-    void updateContactEntries() {
-
-        var contacts = contactPanel.getChildren();
-        for (var contact : contacts) {
-
-            if (contact.getId().equals(activeChat)) {
-                // Selected contact gets here.
-                contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #919191");
-                continue;
-            }
-            contact.setStyle("-fx-border-color: #303030; -fx-border-width: 1px; -fx-background-color: #b5b5b5");
-        
-        }
 
     }
 
