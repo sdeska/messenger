@@ -8,14 +8,10 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
-import fi.sdeska.messenger.utility.UtilityFunctions;
-
 /**
  * Handles the main functionality of the server and listening for and accepting new connection requests.
  */
 public class MessengerServer {
-
-    private static UtilityFunctions util = new UtilityFunctions();
 
     private static final String[] PROTOCOLS = new String[]{"TLSv1.3"};
     private static final String[] CIPHERS = new String[]{"TLS_AES_128_GCM_SHA256"};
