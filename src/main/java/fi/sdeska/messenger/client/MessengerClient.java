@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -178,12 +179,21 @@ public class MessengerClient {
 
     /**
      * Sends a message destined for some other client to the server.
-     * @param message the message to be sent. Should start with "nameOfRecipient:", where nameOfRecipient is a variable for
-     * the name of the client who the message should be forwarded to by the server.
+     * @param recipient the username of the recipient who to send the message to.
+     * @param message the message content to be sent to the recipient.
      */
-    void sendMessage(String message) {
+    void sendMessage(String recipient, String message) {
 
-        message = "Message:" + message;
+        // Creating a timestamp to the message and saving the message to the data structure.
+        var timestamp = java.time.LocalDateTime.now().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        messages.putIfAbsent(recipient, new LinkedList<>());
+        messages.get(recipient).add(timestamp + " Me: " + message);
+        
+        // Create and display an UI component for the message.
+        gui.createMessage(gui.getActiveChat(), timestamp + " Me: " + message);
+
+        // Modify message into correct format for sending.
+        message = "Message:" + recipient + ":" + message;
         util.sendData(message, out);
 
     }
@@ -205,9 +215,10 @@ public class MessengerClient {
             gui.initializeChatView(sender);
         }
         messages.putIfAbsent(sender, new LinkedList<>());
-        messages.get(sender).add(message);
+        var time = java.time.LocalDateTime.now().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        messages.get(sender).add(time + " " + message);
         System.out.println("Logged new message from " + sender + ": " + message);
-        gui.createMessage(sender, sender + ": " + message);
+        gui.createMessage(sender, time + " " + sender + ": " + message);
 
     }
 
