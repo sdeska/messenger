@@ -412,8 +412,7 @@ public class MessengerGUI extends Application {
         if (textField.getText().isEmpty() || !client.getConnectedClients().contains(activeChat)) {
             return;
         }
-        client.sendMessage(activeChat + ":" + textField.getText());
-        createMessage(activeChat, "Me: " + textField.getText());
+        client.sendMessage(activeChat, textField.getText());
         textField.clear();
 
     }
