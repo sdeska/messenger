@@ -185,7 +185,7 @@ public class MessengerClient {
     void sendMessage(String recipient, String message) {
 
         // Creating a timestamp to the message and saving the message to the data structure.
-        var timestamp = java.time.LocalDateTime.now().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        var timestamp = getCurrentTime();
         messages.putIfAbsent(recipient, new LinkedList<>());
         messages.get(recipient).add(timestamp + " Me: " + message);
         
@@ -215,7 +215,7 @@ public class MessengerClient {
             gui.initializeChatView(sender);
         }
         messages.putIfAbsent(sender, new LinkedList<>());
-        var time = java.time.LocalDateTime.now().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        var time = getCurrentTime();
         messages.get(sender).add(time + " " + message);
         System.out.println("Logged new message from " + sender + ": " + message);
         gui.createMessage(sender, time + " " + sender + ": " + message);
@@ -254,6 +254,16 @@ public class MessengerClient {
         System.out.println("Removed client " + username);
         gui.setActiveChat("");
         gui.updateContactPane();
+
+    }
+
+    /**
+     * Returns the current time in the form of HH:mm:ss.
+     * @return string containing the current time.
+     */
+    String getCurrentTime() {
+
+        return java.time.LocalDateTime.now().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
     }
     
