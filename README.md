@@ -1,7 +1,7 @@
 # A simple Java messenger application
 
 Author: Esa Karjalainen
-- E-Mail: ekarjt@gmail.com
+- E-Mail: esa.karjalainen@proton.me
 - Github: sdeska
 
 This repository contains the client- and serverside implementations of a simple messenger app.
